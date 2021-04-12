@@ -9,8 +9,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - lf-fe',
-    title: 'lf-fe',
+    titleTemplate: '%s - Lost and Found',
+    title: 'Lost and Found',
     htmlAttrs: {
       lang: 'en',
     },
@@ -46,7 +46,10 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    // baseURL: 'http://localhost:8080/api',
+    // credentials: true,
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
