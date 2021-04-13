@@ -1,80 +1,107 @@
 <template>
     <v-card>
-        <v-card-title>
-            formularz zgłoszenia straty
+        <v-card-title  class="headline justify-center mb-1">
+            formularz zgłoszenia straty przedmiotu
         </v-card-title>
         <v-card-text>
+            <v-form>
             <v-row>
-                <v-col cols="12" sm="6">
-                    <v-form>
+                <v-col cols="12" md="4" >
+                        <v-subheader>Tytuł ogłoszenia</v-subheader>
+                </v-col> 
+                <v-col cols="12" md="6" >
                         <v-text-field label="Tytuł"></v-text-field>
-
+                </v-col>  
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="4" >   
                         <v-subheader>Dane kontaktowe</v-subheader>
+                </v-col> 
+                <v-col cols="12" md="6" >      
                         <v-text-field label="email"></v-text-field>
                         <v-text-field label="numer telefonu"></v-text-field>
-
-                        <v-subheader>Wybierz date, lub okres zgubienia </v-subheader>
-                        <v-date-picker  v-model="dates" range ></v-date-picker>
-                        <v-subheader>Wybierz kategorie zgubionego przedmiotu</v-subheader>
-                        <v-select
-                            v-model="select"
-                            :hint="`${category_select.category}`"
-                            :items="category_items"
-                            item-text="category"
-                            item-value="category"
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="4" >   
+                    <v-subheader>Wybierz date, lub okres zgubienia </v-subheader>
+                </v-col> 
+                <v-col cols="12" md="6" >      
+                    <v-date-picker  v-model="dates" range ></v-date-picker>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="4" >   
+                    <v-subheader>Wybierz kategorie zgubionego przedmiotu</v-subheader>
+                </v-col> 
+                <v-col cols="12" md="6" >      
+                    <v-select
+                            :items="categories"
                             label="Kategoria"
-                            persistent-hint
-                            return-object
-                            single-line
-                        ></v-select>
-
-                        <br/>
-                        <v-subheader>Dodatkowe tagi</v-subheader>
-                        <div class='tag-input'>
+                    ></v-select>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="4" >   
+                    <v-subheader>Dodatkowe tagi</v-subheader>
+                </v-col> 
+                <v-col cols="12" md="6" >      
+                    <div class='tag-input'>
                             <div v-for='(tag, index) in tags' :key='tag' class='tag-input__tag'>
                             <span @click='removeTag(index)'>x</span>
                             {{ tag }}
                             </div>
-                            <input 
+                            <v-input 
                                 type='text' 
                                 placeholder="Wprowadź dodatkowe tagi" 
                                 class='tag-input__text' 
                                 @keydown.enter='addTag' 
                                 @keydown.188='addTag'
                             />
-                        </div>
-
-                        <br/>
-                        <v-subheader>Miejsce</v-subheader>
-                         <v-text-field label="Podaj miejsce zgubienia"></v-text-field>
-                        <br/>
-
-                        <v-textarea
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="4" >   
+                    <v-subheader>Wybierz miasto w którym zgubiono przedmiot</v-subheader>
+                </v-col> 
+                <v-col cols="12" md="6" >      
+                    <v-select
+                            :items="cities"
+                            label="Miasto"
+                    ></v-select>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="4" >   
+                    <v-subheader>Dodatkowe uwagi</v-subheader>
+                </v-col> 
+                <v-col cols="12" md="6" >      
+                    <v-textarea
                             filled
                             name="input-7-1"
                             label="Dodatkowe uwagi"
                         ></v-textarea>
-                    </v-form>
                 </v-col>
-            </v-row>
+            </v-row> 
+        </v-form>
         </v-card-text>
+        <v-layout justify-center>
         <v-card-actions>
-            <v-btn color="primary">Opublikuj</v-btn>
+            <v-btn 
+            color="primary" v-on:click="publish">Opublikuj</v-btn>
         </v-card-actions>
+        </v-layout>
     </v-card> 
+    
 </template>
 
 <script>
     export default {
     data: () => ({
         dates: ['2021-09-10', '2021-09-20'],
-        category_select: { category: 'Odziez'},
-        category_items: [
-            { category: 'Odziez'},
-            {category: 'Artykuły biurowe'},
-            {category: 'Akcesoria skurzane'},
-            {category: 'inne'},
-        ],
+        categories: ['Odziez', 'Artykuły biurowe', 'Akcesoria skurzane', 'inne'],
+        cities: ['Warszawa', 'Gdańsk','Poznań','Kraków'],
         tags: []
     }),
     methods: {
@@ -88,6 +115,12 @@
         },
         removeTag (index) {
             this.tags.splice(index, 1)
+        },
+        publish(){
+            this.$router.push({
+                path: 'form_publish_success',
+            });
+
         }
     }
     }
@@ -127,5 +160,9 @@
   line-height: 50px;
   background: none;
   color: aliceblue;
+}
+
+.v-subheader{
+    font-size: 25px;
 }
 </style>
