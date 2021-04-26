@@ -45,12 +45,15 @@ export default {
     '@nuxtjs/axios',
   ],
 
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: 'http://localhost:8080/api',
+    baseURL: 'http://localhost:8080/',
     // credentials: true,
   },
 
+
+  
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],

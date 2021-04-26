@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import RestService from '~/common/rest.service.js'
+
 export default {
   data(){
     return {
@@ -30,10 +32,28 @@ export default {
       ]
     }
   },
+  mounted(){
+    this.getPost()
+  },
+  methods: {
+      getPost() {
+          const Id = this.$route.params.id;
+          //RestService.getLostItemSingle(this.$axios,Id)
+          this.$axios
+          .get('http://localhost:8080/lostReports/'+Id)
+            .then((res) => {
+              this.lostItem = res.data
+            })
+            .catch((err) => {
+              // error occured
+              this.error = err
+            })
+      }
+  },
   created() {
-    const ID = Number(this.$route.params.id);
-    let lostItem = this.lostItems.find(lostItem => lostItem.id === ID);
-    this.lostItem = lostItem;
+   // const ID = Number(this.$route.params.id);
+    //let lostItem = this.lostItems.find(lostItem => lostItem.id === ID);
+   // this.lostItem = lostItem;
   }
 }
 </script>

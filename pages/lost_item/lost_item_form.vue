@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data: () => ({
     selected_dates: ['2021-09-10', '2021-09-20'],
@@ -119,6 +120,11 @@ export default {
     entered_email: '',
     entered_phone: '',
     entered_title: '',
+    form: {
+              title: '',
+              description: '',
+              category: ''
+          }
   }),
   methods: {
     addTag(event) {
@@ -139,13 +145,30 @@ export default {
       }
     },
     publish() {
-      var comment = this.extra_comment
-      var city = this.selected_city
-      var category = this.selected_category
-      var dates = this.selected_dates
-      var email = this.entered_email
-      var phone = this.entered_phone
-      var title = this.entered_title
+      // var comment = this.extra_comment
+      // var city = this.selected_city
+      // var category = this.selected_category
+      // var dates = this.selected_dates
+      // var email = this.entered_email
+      // var phone = this.entered_phone
+      // var title = this.entered_title
+      this.form.description =  this.extra_comment
+      this.form.title= this.entered_title
+      this.form.category=this.selected_category
+      axios.post('/lostReports', this.form)
+                 .then((res) => {
+                           var odp=res
+                           this.$router.push({
+                            path: 'form_publish_success',
+                            })
+                 })
+                 .catch((error) => {
+                     // error.response.status Check status code
+                 }).finally(() => {
+                           this.$router.push({
+                            path: 'form_publish_success',
+                            })
+                 });
       this.$router.push({
         path: 'form_publish_success',
       })
