@@ -43,8 +43,8 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
   ],
-
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
@@ -52,8 +52,6 @@ export default {
     // credentials: true,
   },
 
-
-  
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
@@ -75,4 +73,23 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  auth: {
+    redirect: {
+      login: '/',
+      callback: '/',
+    },
+    strategies: {
+      local: false,
+      auth0: {
+        domain: 'lost-n-found.eu.auth0.com',
+        clientId: 'rbsGyGXbR74uHFClVpzcViYmaeFU7B0C',
+        // scope: ['openid', 'profile', 'email', 'offline_access'],
+        // responseType: 'code',
+        // grantType: 'authorization_code',
+        // codeChallengeMethod: 'S256',
+      },
+    },
+    watchLoggedIn: false,
+  },
 }
