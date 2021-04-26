@@ -15,11 +15,11 @@ export default {
   },
 
   head: {
-    title: 'Index',
+    title: 'Welcome',
   },
 
   mounted() {
-    this.$store.dispatch('setPageName', 'Index')
+    this.$store.dispatch('setPageName', '')
   },
 }
 </script>
