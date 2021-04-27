@@ -1,35 +1,27 @@
 <template>
   <v-card>
     <v-card-title>{{ lostItem.title }}</v-card-title>
-    <v-card-text></v-card-text>
+    <v-card-text>
+      Kategoria: {{lostItem.category}}
+      <br/>
+      Opis: {{lostItem.description}}
+       </v-card-text>
+      <v-btn @click.prevent="resolve_post()">>
+        Oznacz jako znalezione
+      </v-btn>
+      <v-btn @click.prevent="edit_post()">>
+        Edytuj post
+      </v-btn>
+   
   </v-card>
 </template>
 
 <script>
-import RestService from '~/common/rest.service.js'
-
+import axios from 'axios';
 export default {
   data(){
     return {
       lostItem: {},
-      lostItems: [
-        {
-          id: 1,
-          title: 'Dlugopis',
-          category: 'Akcesoria biurowe',
-          description: 'Zgubiony dlugopis wczoraj',
-          location: '1234 Fancy Ave',
-          date: '12-25-2019'
-        },
-        {
-          id: 2,
-          title: 'Szalik',
-          category: 'Odzież',
-          description: 'Zgubiony szalik wczoraj',
-          location: 'Gdańsk',
-          date: '12-25-2019'
-        }
-      ]
     }
   },
   mounted(){
@@ -48,13 +40,35 @@ export default {
               // error occured
               this.error = err
             })
-      }
+      },
+      resolve_post(){
+        axios.post('/lostReports'+this.lostItem.lostReportId+'/resolve')
+                 .then((res) => {
+                           var odp=res
+                           this.$router.push({
+                            path: 'resolved_post',
+                            })
+                 })
+                 .catch((error) => {
+                     // error.response.status Check status code
+                 }).finally(() => {
+                           this.$router.push({
+                            path: 'resolved_post',
+                            })
+                 });
+      this.$router.push({
+        path: 'resolved_post',
+      
+       })
+  },
+  edit_post(){
+    this.$router.push({
+        path: "edit/"+this.lostItem.lostReportId,
+      })
   },
   created() {
-   // const ID = Number(this.$route.params.id);
-    //let lostItem = this.lostItems.find(lostItem => lostItem.id === ID);
-   // this.lostItem = lostItem;
   }
+}
 }
 </script>
 
