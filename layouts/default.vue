@@ -18,12 +18,14 @@
     <v-main>
       <nuxt />
     </v-main>
+    <cookie-snackbar />
   </v-app>
 </template>
 
 <script>
+import CookieSnackbar from '~/components/CookieSnackbar.vue'
 export default {
-  data: () => ({}),
+  components: { CookieSnackbar },
 
   computed: {
     pageName() {
