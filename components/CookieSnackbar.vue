@@ -23,7 +23,7 @@ export default {
   data: () => ({
     snackbar: false,
     cookiePolicy:
-      'This website uses cookies so that we can provide you with the best user experience. To read more about the cookies we use and to change your settings see our cookies policy (link). Learn more (link).',
+      'This website uses cookies so that we can provide you with the best user experience.',
   }),
 
   mounted() {
