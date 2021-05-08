@@ -3,16 +3,16 @@ variables:
   LATEST_IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
 
 stages:
-  - test
+#  - test
   - build
   - deploy
 
-test:
-  image: node:10.20.1-alpine3.11
-  stage: test
-  script:
-    - yarn install
-    - yarn test
+#test:
+#  image: node:10.20.1-alpine3.11
+#  stage: test
+#  script:
+#    - yarn install
+#    - yarn test
 
 build:
   image: docker:19.03.8
