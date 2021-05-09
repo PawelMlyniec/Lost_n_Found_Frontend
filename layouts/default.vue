@@ -1,18 +1,31 @@
 <template>
   <v-app dark>
     <v-app-bar dense app>
-      <v-btn icon to="/" :ripple="false" depressed class="ml-1 mr-4">
-        <v-icon>mdi-home</v-icon>
-      </v-btn>
+      <v-row no-gutters>
+        <v-row align="center">
+          <v-btn icon to="/" :ripple="false" depressed class="ml-1 mr-4">
+            <v-icon>mdi-home</v-icon>
+          </v-btn>
 
-      <span>{{ pageName }}</span>
-      <v-spacer />
-      <!-- <template v-if="!loggedIn"> -->
-      <v-btn color="primary" class="mr-3" @click="login()">Login</v-btn>
-      <!-- </template> -->
-      <!-- <template v-else> -->
-      <v-btn color="primary" @click="logout()">Logout</v-btn>
-      <!-- </template> -->
+          <span>{{ pageName }}</span>
+        </v-row>
+        <!-- <v-spacer /> -->
+        <v-row no-gutters justify="center" align="center">
+          <v-btn text :to="'/found_item/list'" :ripple="false" disabled
+            >Found</v-btn
+          >
+          <v-btn text :to="'/lost_item/list'" :ripple="false">Lost</v-btn>
+        </v-row>
+        <!-- <v-spacer /> -->
+        <v-row justify="end" align="center">
+          <!-- <template v-if="!loggedIn"> -->
+          <v-btn color="primary" class="mr-3" @click="login()">Login</v-btn>
+          <!-- </template> -->
+          <!-- <template v-else> -->
+          <v-btn color="primary" @click="logout()">Logout</v-btn>
+          <!-- </template> -->
+        </v-row>
+      </v-row>
     </v-app-bar>
 
     <v-main>
@@ -35,6 +48,10 @@ export default {
     // loggedIn() {
     //   return this.$auth.loggedIn
     // },
+  },
+
+  mounted() {
+    this.$store.dispatch('setPageName', 'Lost items')
   },
 
   methods: {

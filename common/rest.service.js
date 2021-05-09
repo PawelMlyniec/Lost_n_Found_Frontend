@@ -1,23 +1,19 @@
 'use strict'
 
 export default {
-  
-  getItem(axios) {
-    return axios.get('/item')
+  getLostItem(axios, id) {
+    return axios.get(`/lostReports/${id}`)
   },
-  getLostItems() {
-  //async getLostItems() {
-    let res =[] 
-    //await axios.get("/events");
-    return res.data;
+
+  getLostItems(axios) {
+    return axios.get('/lostReports')
   },
-  getLostItemSingle(axios,lostItemId) {
-  //async getLostItemSingle(lostItemId) {
-    return axios.get('http://localhost:8080/lostReports/'+lostItemId, {crossdomain: true ,
-    proxy: {
-      host: '127.0.0.1',
-      port: 8080
-    }
-    })
-  }
+
+  resolveLostItem(axios, id) {
+    return axios.post(`/lostReports/${id}/resolve`)
+  },
+
+  deleteLostItem(axios, id) {
+    return axios.delete(`/lostReports/${id}`)
+  },
 }
