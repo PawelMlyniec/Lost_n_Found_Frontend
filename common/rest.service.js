@@ -16,4 +16,7 @@ export default {
   deleteLostItem(axios, id) {
     return axios.delete(`/lostReports/${id}`)
   },
+  getLostItems(axios, page, size, body){
+    return axios.post('http://34.98.81.177/lostReports/searches?page='+page+'&size='+size, body)
+  }
 }

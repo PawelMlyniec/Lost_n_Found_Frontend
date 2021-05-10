@@ -127,7 +127,6 @@ export default {
           var odp = res
           this.$router.push({
             path: ""+this.lostItem.lostReportId,
-            //path: 'edit_success',
           })
         })
         .catch((error) => {
@@ -136,12 +135,10 @@ export default {
         .finally(() => {
           this.$router.push({
             path: ""+this.lostItem.lostReportId,
-            //path: 'edit_success',
           })
         })
       this.$router.push({
         path: "../"+this.lostItem.lostReportId,
-        //path: 'edit_success',
       })
     },
   },
