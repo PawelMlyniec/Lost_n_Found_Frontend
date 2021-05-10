@@ -2,10 +2,10 @@
   <v-card class="mt-6">
     <v-form >
        <v-text-field v-model="titlePart" label="Fragment nazwy"></v-text-field>
-       <v-select label="Kategoria" v-model="category" :items="categories"></v-select>
+       <v-text-field v-model="category" label="Kategoria"></v-text-field>
          <v-menu
-      ref="menu"
-      v-model="menu"
+      ref="menuFrom"
+      v-model="menuFrom"
       :close-on-content-click="false"
       transition="scale-transition"
       offset-y
@@ -13,7 +13,7 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-text-field
-          v-model="date"
+          v-model="reportedFrom"
           label="Zgubony od"
           prepend-icon="mdi-calendar"
           readonly
@@ -23,15 +23,15 @@
       </template>
       <v-date-picker
         ref="picker"
-        v-model="date"
-        :max="new Date().toISOString().substr(0, 10)"
-        min="1950-01-01"
-        @change="save"
+        v-model="reportedFrom"
+        :max="new Date().toISOString()"
+        min="2020-04-18T12:50:17.876Z"
+        @change="saveFrom"
       ></v-date-picker>
     </v-menu>
       <v-menu
-      ref="menu"
-      v-model="menu"
+      ref="menuTo"
+      v-model="menuTo"
       :close-on-content-click="false"
       transition="scale-transition"
       offset-y
@@ -39,8 +39,8 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-text-field
-          v-model="date"
-          label="Zgubony do"
+          v-model="reportedTo"
+          label="Zgubiony do"
           prepend-icon="mdi-calendar"
           readonly
           v-bind="attrs"
@@ -49,11 +49,12 @@
       </template>
       <v-date-picker
         ref="picker"
-        v-model="date"
-        :max="new Date().toISOString().substr(0, 10)"
-        min="1950-01-01"
-        @change="save"
+        v-model="reportedTo"
+        :max="new Date().toISOString()"
+        min="2020-04-18T12:50:17.876Z"
+        @change="saveTo"
       ></v-date-picker>
+
     </v-menu>
     </v-form>
           <v-card
@@ -65,6 +66,7 @@
     <v-btn color="primary" @click.prevent="search()">Wyszukaj</v-btn>
           </v-card>
     <v-data-table
+      :hide-default-footer="true"
       :headers="headers"
       :items="lostItems"
       :sort-by="'date'"
@@ -72,6 +74,14 @@
       @click:row="rowClick"
     >
     </v-data-table>
+    <v-row>
+    <v-col class="text-left">
+    <v-btn v-if="this.currentPage!=0" color="primary" @click.prevent="prevPage()">Poprzednia strona</v-btn>
+    </v-col>
+    <v-col class="text-right">
+    <v-btn v-if="this.lostItems.length ==20" color="primary" @click.prevent="nextPage()">Natępna strona</v-btn>
+    </v-col>
+    </v-row>
   </v-card>
 </template>
 
@@ -80,18 +90,20 @@ import RestService from '~/common/rest.service'
 export default {
   data: () => ({
     headers: [
+      { text: 'id', value: 'lostReportId' },
       { text: 'Title', value: 'title' },
       { text: 'Description', value: 'description' },
       { text: 'Category', value: 'category' },
       { text: 'Date', value: 'reportedAt' },
     ],
-   date: null,
+   reportedFrom: null,
+   reportedTo: null,
     lostItems: [],
     titlePart:"",
     category:"",
-    menu: false,
-    categories:['car', 'Odzież','Akcesoria biurowe']
-,
+    menuFrom: false,
+    menuTo: false,
+    currentPage:0,
   }),
    watch: {
     form (val) {
@@ -107,26 +119,84 @@ export default {
     category: ""
     }
     
-    RestService.getLostItems(this.$axios, 0,20, body)
+    RestService.getLostItems(this.$axios,0,20, body)
         .then((res) => {
           this.lostItems = res.data.content
         })
         .catch((err) => {
           this.getError = err
-        })
-
- 
+        }) 
   },
 
   methods: {
     rowClick(row) {
       this.$router.push(`/lost_item/${row.id}`)
     },
-    save (date) {
-      this.$refs.menu.save(date)
+    saveTo (date) {
+      this.$refs.menuTo.save(date)
     },
+    saveFrom (date) {
+      this.$refs.menuFrom.save(date)
+    },
+    nextPage(){
+          var body = {
+    titleFragment: "",
+    reportedFrom: "",
+    reportedTo: "",
+    category: ""
+    }
+    this.currentPage=this.currentPage+1
+    
+    RestService.getLostItems(this.$axios,this.currentPage,20, body)
+        .then((res) => {
+          this.lostItems = res.data.content
+        })
+        .catch((err) => {
+          this.getError = err
+        }) 
+  },
+      prevPage(){
+          var body = {
+    titleFragment: "",
+    reportedFrom: "",
+    reportedTo: "",
+    category: ""
+    }
+    if(this.currentPage-1>=0){
+    this.currentPage=this.currentPage-1
+    }
+    RestService.getLostItems(this.$axios,this.currentPage,20, body)
+        .then((res) => {
+          this.lostItems = res.data.content
+        })
+        .catch((err) => {
+          this.getError = err
+        }) 
+  },
     search(){
-
+            var body = {
+    titleFragment: "",
+    reportedFrom: "",
+    reportedTo: "",
+    category: ""
+    }
+    if(this.reportedFrom != null){
+    var dateFrom = new Date(this.reportedFrom).toISOString()
+    }
+    if(this.reportedTo != null){
+    var dateTo = new Date(this.reportedTo).toISOString()
+    }
+    body.titleFragment = this.titlePart
+    body.reportedFrom = dateFrom
+    body.reportedTo = dateTo
+    body.category=this.category
+    RestService.getLostItems(this.$axios, 0,20, body)
+        .then((res) => {
+          this.lostItems = res.data.content
+        })
+        .catch((err) => {
+          this.getError = err
+        }) 
     }
   },
 }
