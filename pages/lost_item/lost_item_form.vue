@@ -107,7 +107,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import RestService from '~/common/rest.service'
+
 export default {
   data: () => ({
     selected_dates: ['2021-09-10', '2021-09-20'],
@@ -120,16 +121,11 @@ export default {
     entered_email: '',
     entered_phone: '',
     entered_title: '',
-    form: {
-      title: '',
-      description: '',
-      category: '',
-    },
   }),
   methods: {
     addTag(event) {
       event.preventDefault()
-      var val = event.target.value.trim()
+      const val = event.target.value.trim()
       if (val.length > 0) {
         this.tags.push(val)
         event.target.value = ''
@@ -152,13 +148,13 @@ export default {
       // var email = this.entered_email
       // var phone = this.entered_phone
       // var title = this.entered_title
-      this.form.description = this.extra_comment
-      this.form.title = this.entered_title
-      this.form.category = this.selected_category
-      axios
-        .post('http://34.98.81.177/lostReports', this.form)
+
+      RestService.addLostItemPost(this.$axios, {
+        title: this.entered_title,
+        description: this.extra_comment,
+        category: this.selected_category,
+      })
         .then((res) => {
-          var odp = res
           this.$router.push({
             path: 'form_publish_success',
           })

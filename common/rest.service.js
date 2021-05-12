@@ -2,7 +2,13 @@
 
 export default {
   getLostItem(axios, id) {
-    return axios.get(`/lostReports/${id}`)
+    // return axios.get(`/lostReports/${id}`)
+    return axios.get(`/lostReports/${id}`, {
+      withCredentials: true,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+      },
+    })
   },
 
   // getLostItems(axios) {
@@ -22,5 +28,13 @@ export default {
       '/lostReports/searches?page=' + page + '&size=' + size,
       body
     )
+  },
+
+  addLostItemPost(axios, { title, description, category }) {
+    return axios.post('/lostReports', {
+      title,
+      description,
+      category,
+    })
   },
 }

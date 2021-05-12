@@ -9,21 +9,27 @@
 
           <span>{{ pageName }}</span>
         </v-row>
-        <!-- <v-spacer /> -->
         <v-row no-gutters justify="center" align="center">
-          <v-btn text :to="'/found_item/list'" :ripple="false" disabled
+          <v-btn color="primary" class="mr-3" :to="'/lost_item/lost_item_form'"
+            >Add post</v-btn
+          >
+          <v-btn
+            text
+            :to="'/found_item/list'"
+            :ripple="false"
+            disabled
+            class="mr-3"
             >Found</v-btn
           >
           <v-btn text :to="'/lost_item/list'" :ripple="false">Lost</v-btn>
         </v-row>
-        <!-- <v-spacer /> -->
         <v-row justify="end" align="center">
-          <!-- <template v-if="!loggedIn"> -->
-          <v-btn color="primary" class="mr-3" @click="login()">Login</v-btn>
-          <!-- </template> -->
-          <!-- <template v-else> -->
-          <v-btn color="primary" @click="logout()">Logout</v-btn>
-          <!-- </template> -->
+          <template v-if="!loggedIn">
+            <v-btn color="primary" class="mr-3" @click="login()">Login</v-btn>
+          </template>
+          <template v-else>
+            <v-btn color="primary" @click="logout()">Logout</v-btn>
+          </template>
         </v-row>
       </v-row>
     </v-app-bar>
@@ -45,9 +51,9 @@ export default {
       return this.$store.getters.pageName
     },
 
-    // loggedIn() {
-    //   return this.$auth.loggedIn
-    // },
+    loggedIn() {
+      return this.$auth.isAuthenticated()
+    },
   },
 
   mounted() {
@@ -56,11 +62,13 @@ export default {
 
   methods: {
     login() {
-      this.$auth.loginWith('auth0')
+      this.$auth.login()
     },
 
     logout() {
-      this.$auth.logout()
+      this.$auth.logout({
+        returnTo: 'http://localhost:3000/',
+      })
     },
   },
 }
