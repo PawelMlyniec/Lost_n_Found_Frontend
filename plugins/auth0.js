@@ -5,7 +5,7 @@ import Vue from 'vue'
 const webAuth = new auth0.WebAuth({
   domain: 'lost-n-found.eu.auth0.com',
   clientID: 'rbsGyGXbR74uHFClVpzcViYmaeFU7B0C',
-  redirectUri: 'http://localhost:3000/callback',
+  redirectUri: 'http://35.198.161.140/callback',
   // audience: 'https://' + 'lost-n-found.eu.auth0.com' + '/api/v2/',
   audience: 'http://localhost:5000',
   responseType: 'token id_token',
@@ -64,7 +64,7 @@ const auth = new Vue({
         localStorage.removeItem('expires_at')
         localStorage.removeItem('user')
         webAuth.logout({
-          returnTo: 'http://localhost:3000/', // Allowed logout URL listed in dashboard
+          returnTo: 'http://35.198.161.140/', // Allowed logout URL listed in dashboard
           clientID: 'rbsGyGXbR74uHFClVpzcViYmaeFU7B0C',
         })
       })

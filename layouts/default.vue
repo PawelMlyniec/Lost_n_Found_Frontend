@@ -63,7 +63,7 @@ export default {
 
     logout() {
       this.$auth.logout({
-        returnTo: 'http://localhost:3000/',
+        returnTo: 'http://http://35.198.161.140/',
       })
     },
   },
