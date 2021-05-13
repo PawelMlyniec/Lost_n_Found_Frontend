@@ -16,11 +16,21 @@ export default {
   // },
 
   resolveLostItem(axios, id) {
-    return axios.post(`/lostReports/${id}/resolve`)
+    return axios.post(`/lostReports/${id}/resolve`, {
+      withCredentials: true,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+      },
+    })
   },
 
   deleteLostItem(axios, id) {
-    return axios.delete(`/lostReports/${id}/delete`)
+    return axios.delete(`/lostReports/${id}/delete`, {
+      withCredentials: true,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+      },
+    })
   },
 
   getLostItems(axios, page, size, body) {
