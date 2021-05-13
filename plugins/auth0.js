@@ -49,6 +49,9 @@ const auth = new Vue({
         localStorage.setItem('user', JSON.stringify(user))
       },
     },
+    isAuthenticated() {
+      return new Date().getTime() < this.expiresAt
+    },
   },
   methods: {
     login() {
@@ -65,9 +68,6 @@ const auth = new Vue({
           clientID: 'rbsGyGXbR74uHFClVpzcViYmaeFU7B0C',
         })
       })
-    },
-    isAuthenticated() {
-      return new Date().getTime() < this.expiresAt
     },
     handleAuthentication() {
       return new Promise((resolve, reject) => {

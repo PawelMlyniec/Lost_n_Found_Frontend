@@ -23,7 +23,7 @@
           >
           <v-btn text :to="'/lost_item/list'" :ripple="false">Lost</v-btn>
         </v-row>
-        <v-row justify="end" align="center">
+        <v-row justify="end" align="center" no-gutters>
           <template v-if="!loggedIn">
             <v-btn color="primary" class="mr-3" @click="login()">Login</v-btn>
           </template>
@@ -52,7 +52,7 @@ export default {
     },
 
     loggedIn() {
-      return this.$auth.isAuthenticated()
+      return this.$auth.isAuthenticated
     },
   },
 

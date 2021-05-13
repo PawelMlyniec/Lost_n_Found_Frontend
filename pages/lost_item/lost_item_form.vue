@@ -172,7 +172,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .tag-input {
   width: 100%;
   border: 1px solid #eee;

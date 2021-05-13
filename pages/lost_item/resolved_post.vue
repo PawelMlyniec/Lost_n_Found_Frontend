@@ -5,4 +5,3 @@
     </v-card>
   </v-row>
 </template>
-<script></script>
