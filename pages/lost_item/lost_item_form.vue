@@ -1,33 +1,33 @@
 <template>
   <v-card>
     <v-card-title class="headline justify-center mb-1">
-      formularz zgłoszenia straty przedmiotu
+      Fill in the lost item form
     </v-card-title>
     <v-card-text>
       <v-form>
         <v-row>
           <v-col cols="12" md="4">
-            <v-subheader>Tytuł ogłoszenia</v-subheader>
+            <v-subheader>Listing title</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field label="Tytuł" v-model="entered_title"></v-text-field>
+            <v-text-field v-model="entered_title"></v-text-field>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="12" md="4">
-            <v-subheader>Dane kontaktowe</v-subheader>
+            <v-subheader>Contact info</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field label="email" v-model="entered_email"></v-text-field>
+            <v-text-field v-model="entered_email" label="E-mail"></v-text-field>
             <v-text-field
-              label="numer telefonu"
               v-model="entered_phone"
+              label="Phone number"
             ></v-text-field>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="12" md="4">
-            <v-subheader>Wybierz date, lub okres zgubienia </v-subheader>
+            <v-subheader>Date or time period</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
             <v-date-picker v-model="selected_dates" range></v-date-picker>
@@ -35,19 +35,19 @@
         </v-row>
         <v-row>
           <v-col cols="12" md="4">
-            <v-subheader>Wybierz kategorie zgubionego przedmiotu</v-subheader>
+            <v-subheader>Item category</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
             <v-select
-              :items="categories"
-              label="Kategoria"
               v-model="selected_category"
+              :items="categories"
+              label="Category"
             ></v-select>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="12" md="4">
-            <v-subheader>Dodatkowe tagi</v-subheader>
+            <v-subheader>Additional tags</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
             <div class="tag-input">
@@ -61,7 +61,7 @@
               </div>
               <input
                 type="text"
-                placeholder="Wprowadź dodatkowe tagi"
+                placeholder="Additional tags"
                 class="tag-input__text"
                 @keydown.enter="addTag"
                 @keydown.188="addTag"
@@ -72,34 +72,31 @@
         </v-row>
         <v-row>
           <v-col cols="12" md="4">
-            <v-subheader
-              >Wybierz miasto w którym zgubiono przedmiot</v-subheader
-            >
+            <v-subheader>City in which you lost the item</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
             <v-select
-              :items="cities"
-              label="Miasto"
               v-model="selected_city"
+              :items="cities"
+              label="City"
             ></v-select>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="12" md="4">
-            <v-subheader>Dodatkowe uwagi</v-subheader>
+            <v-subheader>Description</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
             <v-textarea
+              v-model="extra_comment"
               filled
               name="extra_comment"
-              label="Dodatkowe uwagi"
-              v-model="extra_comment"
             ></v-textarea>
           </v-col>
         </v-row>
 
         <v-layout justify-center>
-          <v-btn color="primary" @click.prevent="publish()">Opublikuj</v-btn>
+          <v-btn color="primary" @click.prevent="publish()">Post</v-btn>
         </v-layout>
       </v-form>
     </v-card-text>
@@ -112,7 +109,7 @@ import RestService from '~/common/rest.service'
 export default {
   data: () => ({
     selected_dates: ['2021-09-10', '2021-09-20'],
-    categories: ['Odziez', 'Artykuły biurowe', 'Akcesoria skurzane', 'inne'],
+    categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
     cities: ['Warszawa', 'Gdańsk', 'Poznań', 'Kraków'],
     tags: [],
     extra_comment: [],

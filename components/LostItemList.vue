@@ -1,8 +1,8 @@
 <template>
   <v-card class="mt-6">
     <v-form>
-      <v-text-field v-model="titlePart" label="Fragment nazwy"></v-text-field>
-      <v-text-field v-model="category" label="Kategoria"></v-text-field>
+      <v-text-field v-model="titlePart" label="Title"></v-text-field>
+      <v-text-field v-model="category" label="Category"></v-text-field>
       <v-menu
         ref="menuFrom"
         v-model="menuFrom"
@@ -14,7 +14,7 @@
         <template #activator="{ on, attrs }">
           <v-text-field
             v-model="reportedFrom"
-            label="Zgubony od"
+            label="Lost from"
             prepend-icon="mdi-calendar"
             readonly
             v-bind="attrs"
@@ -40,7 +40,7 @@
         <template #activator="{ on, attrs }">
           <v-text-field
             v-model="reportedTo"
-            label="Zgubiony do"
+            label="Lost to"
             prepend-icon="mdi-calendar"
             readonly
             v-bind="attrs"
@@ -62,7 +62,7 @@
       flat
       tile
     >
-      <v-btn color="primary" @click.prevent="search()">Wyszukaj</v-btn>
+      <v-btn color="primary" @click.prevent="search()">Search</v-btn>
     </v-card>
     <v-data-table
       :hide-default-footer="true"
@@ -99,7 +99,7 @@ import RestService from '~/common/rest.service'
 export default {
   data: () => ({
     headers: [
-      { text: 'id', value: 'lostReportId' },
+      // { text: 'id', value: 'lostReportId' },
       { text: 'Title', value: 'title' },
       { text: 'Description', value: 'description' },
       { text: 'Category', value: 'category' },
@@ -114,6 +114,7 @@ export default {
     menuTo: false,
     currentPage: 0,
   }),
+
   watch: {
     form(val) {
       val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))

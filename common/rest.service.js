@@ -20,7 +20,7 @@ export default {
   },
 
   deleteLostItem(axios, id) {
-    return axios.delete(`/lostReports/${id}`)
+    return axios.delete(`/lostReports/${id}/delete`)
   },
 
   getLostItems(axios, page, size, body) {
@@ -32,6 +32,14 @@ export default {
 
   addLostItemPost(axios, { title, description, category }) {
     return axios.post('/lostReports', {
+      title,
+      description,
+      category,
+    })
+  },
+
+  updateLostItem(axios, { lostReportId, title, description, category }) {
+    return axios.put(`/lostReports/${lostReportId}/edit`, {
       title,
       description,
       category,

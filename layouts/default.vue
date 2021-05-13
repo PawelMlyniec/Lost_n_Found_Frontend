@@ -56,10 +56,6 @@ export default {
     },
   },
 
-  mounted() {
-    this.$store.dispatch('setPageName', 'Lost items')
-  },
-
   methods: {
     login() {
       this.$auth.login()

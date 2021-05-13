@@ -32,18 +32,23 @@ export default {
   methods: {
     resolvePost() {
       // TODO: possibly temp
-      RestService.resolveLostItem(this.$axios, this.lostItem.id).then((res) => {
-        this.$router.push('/lost_item/resolved_post')
-      })
+      RestService.resolveLostItem(this.$axios, this.lostItem.lostReportId).then(
+        (res) => {
+          this.$router.push('/lost_item/resolved_post')
+        }
+      )
     },
 
     editPost() {
-      this.$router.push(`/lost_item/edit/${this.lostItem.id}`)
+      this.$router.push(`/lost_item/edit/${this.lostItem.lostReportId}`)
     },
 
     deletePost() {
-      RestService.deleteLostItem(this.$axios, this.lostItem.id)
-      this.$router.push('deleted_post')
+      RestService.deleteLostItem(this.$axios, this.lostItem.lostReportId).then(
+        (res) => {
+          this.$router.push('deleted_post')
+        }
+      )
     },
   },
 }

@@ -8,15 +8,15 @@
         <v-form>
           <v-row>
             <v-col cols="12" md="4">
-              <v-subheader>Tytuł ogłoszenia</v-subheader>
+              <v-subheader>Listing title</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
-              <v-text-field label="Tytuł" v-model="title"></v-text-field>
+              <v-text-field v-model="title"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" md="4">
-              <v-subheader>Wybierz date, lub okres zgubienia </v-subheader>
+              <v-subheader>Date or time period</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
               <v-date-picker v-model="selected_dates" range></v-date-picker>
@@ -24,40 +24,37 @@
           </v-row>
           <v-row>
             <v-col cols="12" md="4">
-              <v-subheader>Wybierz kategorie zgubionego przedmiotu</v-subheader>
+              <v-subheader>Item category</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
               <v-select
-                :items="categories"
-                label="Kategoria"
                 v-model="category"
+                :items="categories"
+                label="Category"
               ></v-select>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" md="4">
-              <v-subheader
-                >Wybierz miasto w którym zgubiono przedmiot</v-subheader
-              >
+              <v-subheader>City in which you lost the item</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
               <v-select
-                :items="cities"
-                label="Miasto"
                 v-model="selected_city"
+                :items="cities"
+                label="City"
               ></v-select>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" md="4">
-              <v-subheader>Opis</v-subheader>
+              <v-subheader>Description</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
               <v-textarea
+                v-model="description"
                 filled
                 name="extra_comment"
-                label="opis"
-                v-model="description"
               ></v-textarea>
             </v-col>
           </v-row>
@@ -71,18 +68,19 @@
   </v-row>
 </template>
 <script>
-import axios from 'axios'
+import RestService from '~/common/rest.service'
+
 export default {
   data() {
     return {
       lostItem: {},
       selected_dates: ['2021-09-10', '2021-09-20'],
       categories: [
-        'Odziez',
-        'Artykuły biurowe',
-        'Akcesoria skurzane',
-        'inne',
-        'car',
+        'Clothes',
+        'Office supplies',
+        'Accessories',
+        'Cars',
+        'Other',
       ],
       cities: ['Warszawa', 'Gdańsk', 'Poznań', 'Kraków'],
       selected_city: '',
@@ -103,9 +101,7 @@ export default {
   },
   methods: {
     getPost() {
-      var Id = this.$route.params.id
-      this.$axios
-        .get('http://34.98.81.177/lostReports/' + Id)
+      RestService.getLostItem(this.$axios, this.$route.params.id)
         .then((res) => {
           this.lostItem = res.data
           this.category = this.lostItem.category
@@ -117,16 +113,15 @@ export default {
           this.error = err
         })
     },
-    async update() {
+    update() {
       this.form.description = this.description
       this.form.title = this.title
       this.form.category = this.category
-      await axios
-        .put('http://34.98.81.177/lostReports/'+this.lostItem.lostReportId+'/edit', this.form)
+
+      RestService.updateLostItem(this.$axios, this.lostItem)
         .then((res) => {
-          var odp = res
           this.$router.push({
-            path: ""+this.lostItem.lostReportId,
+            path: '' + this.lostItem.lostReportId,
           })
         })
         .catch((error) => {
@@ -134,11 +129,11 @@ export default {
         })
         .finally(() => {
           this.$router.push({
-            path: ""+this.lostItem.lostReportId,
+            path: '' + this.lostItem.lostReportId,
           })
         })
       this.$router.push({
-        path: "../"+this.lostItem.lostReportId,
+        path: '../' + this.lostItem.lostReportId,
       })
     },
   },
