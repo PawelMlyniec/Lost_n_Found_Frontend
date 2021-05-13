@@ -49,10 +49,19 @@ export default {
   },
 
   updateLostItem(axios, { lostReportId, title, description, category }) {
-    return axios.put(`/lostReports/${lostReportId}/edit`, {
-      title,
-      description,
-      category,
-    })
+    return axios.put(
+      `/lostReports/${lostReportId}/edit`,
+      {
+        title,
+        description,
+        category,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+        },
+      }
+    )
   },
 }
