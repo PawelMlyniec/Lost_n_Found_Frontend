@@ -38,13 +38,57 @@
       <nuxt />
     </v-main>
     <cookie-snackbar />
+       <v-footer
+      color="primary lighten-1"
+      padless
+    >
+      <v-row
+        justify="center"
+        no-gutters
+      >
+        <v-btn
+          color="white"
+          text
+          rounded
+          class="my-2"
+           href="/contact" 
+        >
+         Contact
+        </v-btn>
+                <v-btn
+          color="white"
+          text
+          rounded
+          class="my-2"
+           href="/RODO.pdf" download=""
+        >
+         RODO Politics
+        </v-btn>
+                <v-btn
+          color="white"
+          text
+          rounded
+          class="my-2"
+           href="/COOKIES.pdf" download=""
+        >
+         Cookies Politics
+        </v-btn>
+        <v-col
+          class="primary lighten-2 py-4 text-center white--text"
+          cols="12"
+        >
+            <strong>Lost&Found</strong>
+        </v-col>
+      </v-row>
+    </v-footer>
+ 
   </v-app>
 </template>
 
 <script>
 import CookieSnackbar from '~/components/CookieSnackbar.vue'
 export default {
-  components: { CookieSnackbar },
+  components: { CookieSnackbar, },
 
   computed: {
     pageName() {
@@ -69,3 +113,12 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+v-btn {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+</style>

@@ -94,9 +94,13 @@
             ></v-textarea>
           </v-col>
         </v-row>
-
+       <v-checkbox
+        v-model="rodo_checkbox"
+        :label="`I accept RODO policy`"
+      >
+      </v-checkbox>
         <v-layout justify-center>
-          <v-btn color="primary" @click.prevent="publish()">Post</v-btn>
+          <v-btn v-if="rodo_checkbox" color="primary" @click.prevent="publish()">Post</v-btn>
         </v-layout>
       </v-form>
     </v-card-text>
@@ -118,6 +122,7 @@ export default {
     entered_email: '',
     entered_phone: '',
     entered_title: '',
+    rodo_checkbox: 0,
   }),
   methods: {
     addTag(event) {
