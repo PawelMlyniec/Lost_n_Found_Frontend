@@ -29,7 +29,7 @@ export default {
   },
 
   deleteLostItem(axios, id) {
-    return axios.delete(`/lostReports/${id}/delete`, {
+    return axios.delete(`/lostReports/${id}`, {
       withCredentials: true,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('access_token'),
@@ -54,7 +54,7 @@ export default {
 
   updateLostItem(axios, { lostReportId, title, description, category }) {
     return axios.put(
-      `/lostReports/${lostReportId}/edit`,
+      `/lostReports/${lostReportId}`,
       {
         title,
         description,
