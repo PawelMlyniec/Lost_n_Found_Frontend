@@ -1,19 +1,18 @@
 'use strict'
 
 export default {
-  getLostItem(axios, id) {
-    // return axios.get(`/lostReports/${id}`)
-    return axios.get(`/lostReports/${id}`, {
-      withCredentials: true,
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-      },
-    })
+  getAuthHeader() {
+    const token = localStorage.getItem('access_token')
+    const headers = token ? { Authorization: 'Bearer ' + token } : {}
+    return headers
   },
 
-  // getLostItems(axios) {
-  //   return axios.get('/lostReports')
-  // },
+  getLostItem(axios, id) {
+    return axios.get(`/lostReports/${id}`, {
+      withCredentials: true,
+      headers: this.getAuthHeader(),
+    })
+  },
 
   resolveLostItem(axios, id) {
     return axios.post(
@@ -21,9 +20,7 @@ export default {
       {},
       {
         withCredentials: true,
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-        },
+        headers: this.getAuthHeader(),
       }
     )
   },
@@ -31,9 +28,7 @@ export default {
   deleteLostItem(axios, id) {
     return axios.delete(`/lostReports/${id}`, {
       withCredentials: true,
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-      },
+      headers: this.getAuthHeader(),
     })
   },
 
@@ -62,9 +57,7 @@ export default {
       },
       {
         withCredentials: true,
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-        },
+        headers: this.getAuthHeader(),
       }
     )
   },
