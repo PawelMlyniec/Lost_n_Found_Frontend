@@ -47,7 +47,7 @@ export default {
     })
   },
 
-  updateLostItem(axios, { lostReportId, title, description, category }) {
+  updateLostItem(axios, lostReportId, { title, description, category }) {
     return axios.put(
       `/lostReports/${lostReportId}`,
       {
