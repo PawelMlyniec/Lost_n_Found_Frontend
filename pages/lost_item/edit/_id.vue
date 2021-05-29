@@ -60,7 +60,7 @@
           </v-row>
 
           <v-layout justify-center>
-            <v-btn color="primary" @click.prevent="update()">Aktualizuj</v-btn>
+            <v-btn color="primary" @click.prevent="update()">Update</v-btn>
           </v-layout>
         </v-form>
       </v-card-text>
@@ -118,7 +118,7 @@ export default {
       this.form.title = this.title
       this.form.category = this.category
 
-      RestService.updateLostItem(this.$axios, this.lostItem)
+      RestService.updateLostItem(this.$axios, this.lostReportId, this.form)
         .then((res) => {
           this.$router.push({
             path: '' + this.lostItem.lostReportId,
