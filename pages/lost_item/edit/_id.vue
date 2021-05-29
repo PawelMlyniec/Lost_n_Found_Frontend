@@ -118,7 +118,7 @@ export default {
       this.form.title = this.title
       this.form.category = this.category
 
-      RestService.updateLostItem(this.$axios, this.lostReportId, this.form)
+      RestService.updateLostItem(this.$axios, this.$route.params.id, this.form)
         .then((res) => {
           this.$router.push({
             path: '' + this.lostItem.lostReportId,
@@ -129,12 +129,9 @@ export default {
         })
         .finally(() => {
           this.$router.push({
-            path: '' + this.lostItem.lostReportId,
+            path: '' + this.$route.params.id,
           })
         })
-      this.$router.push({
-        path: '../' + this.lostItem.lostReportId,
-      })
     },
   },
 }

@@ -40,11 +40,17 @@ export default {
   },
 
   addLostItemPost(axios, { title, description, category }) {
-    return axios.post('/lostReports', {
-      title,
-      description,
-      category,
-    })
+    return axios.post(
+      '/lostReports',
+      {
+        title,
+        description,
+        category,
+      },
+      {
+        headers: this.getAuthHeader(),
+      }
+    )
   },
 
   updateLostItem(axios, lostReportId, { title, description, category }) {
