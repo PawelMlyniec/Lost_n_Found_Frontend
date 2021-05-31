@@ -55,6 +55,27 @@
           @change="saveTo"
         ></v-date-picker>
       </v-menu>
+          <v-col cols="12" md="6">
+            <div class="tag-input">
+              <div
+                v-for="(tag, index) in tags"
+                :key="tag"
+                class="tag-input__tag"
+              >
+                <span @click="removeTag(index)">x</span>
+                {{ tag }}
+              </div>
+              <input
+                type="text"
+                placeholder="Enter Tags"
+                class="tag-input__text"
+                @keydown.enter="addTag"
+                @keydown.188="addTag"
+                @keydown.delete="removeLastTag"
+              />
+            </div>
+          </v-col>
+          <br/>
     </v-form>
     <v-card
       class="d-flex justify-center mb-6"
@@ -84,13 +105,14 @@
       </v-col>
       <v-col class="text-right">
         <v-btn
-          v-if="lostItems.length == 20"
+          v-if="lostItems.length ==10"
           color="primary"
           @click.prevent="nextPage()"
           >Natępna strona</v-btn
         >
       </v-col>
     </v-row>
+    <br/>
   </v-card>
 </template>
 
@@ -103,7 +125,9 @@ export default {
       { text: 'Title', value: 'title' },
       { text: 'Description', value: 'description' },
       { text: 'Category', value: 'category' },
-      { text: 'Date', value: 'reportedAt' },
+      { text: 'DateFrom', value: 'dateFrom' },
+      { text: 'DateTo', value: 'dateTo' },
+      { text: 'Tags', value: 'tags' },
     ],
     reportedFrom: null,
     reportedTo: null,
@@ -113,6 +137,7 @@ export default {
     menuFrom: false,
     menuTo: false,
     currentPage: 0,
+    tags: [],
   }),
 
   watch: {
@@ -127,10 +152,11 @@ export default {
       reportedFrom: '',
       reportedTo: '',
       category: '',
+      tags:[],
     }
     // RestService.getToken(this.$axios).then((res) => {
     // console.log(res)
-    RestService.getLostItems(this.$axios, 0, 20, body)
+    RestService.getLostItems(this.$axios, 0, 10, body)
       .then((res) => {
         this.lostItems = res.data.content
       })
@@ -141,6 +167,23 @@ export default {
   },
 
   methods: {
+    addTag(event) {
+      event.preventDefault()
+      const val = event.target.value.trim()
+      if (val.length > 0) {
+        this.tags.push(val)
+        event.target.value = ''
+      }
+    },
+    removeTag(index) {
+      this.tags.splice(index, 1)
+    },
+
+    removeLastTag(event) {
+      if (event.target.value.length === 0) {
+        this.removeTag(this.tags.length - 1)
+      }
+    },
     rowClick(row) {
       console.log('asd', row)
       this.$router.push(`/lost_item/${row.lostReportId}`)
@@ -152,15 +195,23 @@ export default {
       this.$refs.menuFrom.save(date)
     },
     nextPage() {
+      let dateFrom, dateTo
+      if (this.reportedFrom != null) {
+        dateFrom = new Date(this.reportedFrom).toISOString()
+      }
+      if (this.reportedTo != null) {
+        dateTo = new Date(this.reportedTo).toISOString()
+      }
       let body = {
-        titleFragment: '',
-        reportedFrom: '',
-        reportedTo: '',
-        category: '',
+        titleFragment: this.titlePart,
+        reportedFrom: dateFrom,
+        reportedTo: dateTo,
+        category: this.category,
+        tags:this.tags
       }
       this.currentPage = this.currentPage + 1
 
-      RestService.getLostItems(this.$axios, this.currentPage, 20, body)
+      RestService.getLostItems(this.$axios, this.currentPage, 10, body)
         .then((res) => {
           this.lostItems = res.data.content
         })
@@ -169,30 +220,6 @@ export default {
         })
     },
     prevPage() {
-      let body = {
-        titleFragment: '',
-        reportedFrom: '',
-        reportedTo: '',
-        category: '',
-      }
-      if (this.currentPage - 1 >= 0) {
-        this.currentPage = this.currentPage - 1
-      }
-      RestService.getLostItems(this.$axios, this.currentPage, 20, body)
-        .then((res) => {
-          this.lostItems = res.data.content
-        })
-        .catch((err) => {
-          this.getError = err
-        })
-    },
-    search() {
-      let body = {
-        titleFragment: '',
-        reportedFrom: '',
-        reportedTo: '',
-        category: '',
-      }
       let dateFrom, dateTo
       if (this.reportedFrom != null) {
         dateFrom = new Date(this.reportedFrom).toISOString()
@@ -200,11 +227,41 @@ export default {
       if (this.reportedTo != null) {
         dateTo = new Date(this.reportedTo).toISOString()
       }
-      body.titleFragment = this.titlePart
-      body.reportedFrom = dateFrom
-      body.reportedTo = dateTo
-      body.category = this.category
-      RestService.getLostItems(this.$axios, 0, 20, body)
+      let body = {
+        titleFragment: this.titlePart,
+        reportedFrom: dateFrom,
+        reportedTo: dateTo,
+        category: this.category,
+        tags:this.tags
+      }
+      if (this.currentPage - 1 >= 0) {
+        this.currentPage = this.currentPage - 1
+      }
+      RestService.getLostItems(this.$axios, this.currentPage, 10, body)
+        .then((res) => {
+          this.lostItems = res.data.content
+        })
+        .catch((err) => {
+          this.getError = err
+        })
+    },
+
+    search() {
+      let dateFrom, dateTo
+      if (this.reportedFrom != null) {
+        dateFrom = new Date(this.reportedFrom).toISOString()
+      }
+      if (this.reportedTo != null) {
+        dateTo = new Date(this.reportedTo).toISOString()
+      }
+      let body = {
+        titleFragment: this.titlePart,
+        reportedFrom: dateFrom,
+        reportedTo: dateTo,
+        category: this.category,
+        tags:this.tags
+      }
+      RestService.getLostItems(this.$axios, 0, 10, body)
         .then((res) => {
           this.lostItems = res.data.content
         })
@@ -215,3 +272,43 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.tag-input {
+  width: 100%;
+  border: 1px solid #eee;
+  font-size: 0.9em;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+.tag-input__tag {
+  height: 30px;
+  float: left;
+  margin-right: 10px;
+  background-color: #eee;
+  margin-top: 10px;
+  line-height: 30px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: black;
+}
+
+.tag-input__tag > span {
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+.tag-input__text {
+  border: none;
+  outline: none;
+  font-size: 0.9em;
+  line-height: 50px;
+  background: none;
+  color: aliceblue;
+}
+
+.v-subheader {
+  font-size: 25px;
+}
+</style>

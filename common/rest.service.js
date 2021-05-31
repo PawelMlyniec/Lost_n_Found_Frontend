@@ -39,27 +39,33 @@ export default {
     )
   },
 
-  addLostItemPost(axios, { title, description, category }) {
+  addLostItemPost(axios, { title, description, category, dateFrom, dateTo, tags }) {
     return axios.post(
       '/lostReports',
       {
         title,
         description,
         category,
+        dateFrom,
+        dateTo,
+        tags
       },
       {
         headers: this.getAuthHeader(),
-      }
+      },
+      
     )
   },
 
-  updateLostItem(axios, lostReportId, { title, description, category }) {
+  updateLostItem(axios, lostReportId, { title, description, category, dateFrom, dateTo }) {
     return axios.put(
       `/lostReports/${lostReportId}`,
       {
         title,
         description,
         category,
+        dateFrom,
+        dateTo
       },
       {
         withCredentials: true,

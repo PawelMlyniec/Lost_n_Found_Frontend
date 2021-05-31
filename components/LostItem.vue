@@ -7,9 +7,16 @@
         <br />
         <span>Description: {{ lostItem.description }}</span>
         <br />
-        <span>Location: {{ lostItem.location }}</span>
+        <span>Category: {{ lostItem.category }}</span>
         <br />
-        <span>Date: {{ lostItem.date }}</span>
+        <span>Date from: {{ lostItem.dateFrom }}</span>
+        <br />
+        <span>Date to: {{ lostItem.dateTo }}</span>
+        <br />
+        <span>Tags:</span>
+        <v-text v-for="tag in lostItem.tags" :key="tag">
+       {{ tag}} /
+        </v-text>
         <br />
       </v-col>
     </v-card-text>

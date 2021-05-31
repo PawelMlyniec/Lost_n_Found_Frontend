@@ -116,7 +116,7 @@ export default {
     categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
     cities: ['Warszawa', 'Gdańsk', 'Poznań', 'Kraków'],
     tags: [],
-    extra_comment: [],
+    extra_comment: '',
     selected_city: '',
     selected_category: '',
     entered_email: '',
@@ -143,19 +143,23 @@ export default {
       }
     },
     publish() {
-      // var comment = this.extra_comment
-      // var city = this.selected_city
-      // var category = this.selected_category
-      // var dates = this.selected_dates
-      // var email = this.entered_email
-      // var phone = this.entered_phone
-      // var title = this.entered_title
-
-      RestService.addLostItemPost(this.$axios, {
+      let dateFrom='', dateTo=''
+      if (this.selected_dates != null) {
+        dateFrom = new Date(this.selected_dates[0]).toISOString()
+        if(this.selected_dates.length>1){
+        dateTo = new Date(this.selected_dates[1]).toISOString()
+        }
+      }
+      var body = {
         title: this.entered_title,
         description: this.extra_comment,
         category: this.selected_category,
-      })
+        dateFrom: dateFrom,
+        dateTo: dateTo, 
+        tags: this.tags
+      }
+
+      RestService.addLostItemPost(this.$axios,body)
         .then((res) => {
           this.$router.push({
             path: 'form_publish_success',
