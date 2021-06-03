@@ -7,25 +7,32 @@
         <br />
         <span>Description: {{ lostItem.description }}</span>
         <br />
-        <span>Category: {{ lostItem.category }}</span>
+        <span>Date from: {{ lostItem.dateFrom | formatDate }}</span>
         <br />
-        <span>Date from: {{ lostItem.dateFrom }}</span>
+        <span>Date to: {{ lostItem.dateTo | formatDate }}</span>
         <br />
-        <span>Date to: {{ lostItem.dateTo }}</span>
+        <span>Date to: {{ lostItem.reportedAt | formatDate }}</span>
         <br />
         <span>Tags:</span>
-        <v-text v-for="tag in lostItem.tags" :key="tag">
-       {{ tag}} /
-        </v-text>
+        <span v-for="tag in lostItem.tags" :key="tag"> {{ tag }} / </span>
         <br />
       </v-col>
     </v-card-text>
-    <v-card-actions>
-      <v-btn color="green" @click.prevent="resolvePost()">Mark as found</v-btn>
-      <v-spacer />
-      <v-btn @click.prevent="editPost()">Edit post</v-btn>
-      <v-btn color="red" @click.prevent="deletePost()">Delete post</v-btn>
-    </v-card-actions>
+    <v-template v-if="isReporter">
+      <v-card-actions>
+        <v-btn color="green" @click.prevent="resolvePost">Mark as found</v-btn>
+        <v-spacer />
+        <v-btn @click.prevent="editPost()">Edit post</v-btn>
+        <v-btn color="red" @click.prevent="deletePost">Delete post</v-btn>
+      </v-card-actions>
+    </v-template>
+    <v-template v-else>
+      <v-card-actions>
+        <v-btn color="priamry" @click.prevent="contactReporter"
+          >Contact reporter</v-btn
+        >
+      </v-card-actions>
+    </v-template>
   </v-card>
 </template>
 
@@ -34,6 +41,12 @@ import RestService from '~/common/rest.service'
 export default {
   props: {
     lostItem: { type: Object, default: () => {} },
+  },
+
+  computed: {
+    isReporter() {
+      return this.lostItem.userId === this.$auth.user.sub
+    },
   },
 
   methods: {

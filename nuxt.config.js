@@ -26,7 +26,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/auth0.js',],
+  plugins: ['~/plugins/auth0.js', '~/plugins/filters.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -72,25 +72,5 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-   }
-
-  // auth: {
-  //   redirect: {
-  //     login: '/',
-  //     callback: '/',
-  //   },
-  //   strategies: {
-  //     local: false,
-  //     auth0: {
-  //       domain: 'lost-n-found.eu.auth0.com',
-  //       clientId: 'rbsGyGXbR74uHFClVpzcViYmaeFU7B0C',
-  //       scope: ['openid', 'profile', 'email', 'offline_access'],
-  //       responseType: 'code',
-  //       grantType: 'authorization_code',
-  //       codeChallengeMethod: 'S256',
-  //     },
-  //   },
-  //   watchLoggedIn: false,
-  // },
+  build: {},
 }

@@ -1,15 +1,23 @@
 <template>
-  <v-row justify="center" class="mt-6">
-    <lost-item :lost-item="lostItem" />
-  </v-row>
+  <div>
+    <template v-if="!loading">
+      <v-row justify="center" class="mt-6">
+        <lost-item :lost-item="lostItem" />
+      </v-row>
+    </template>
+    <template v-else>
+      <loading-spinner />
+    </template>
+  </div>
 </template>
 
 <script>
 import LostItem from '@/components/LostItem'
 import RestService from '~/common/rest.service'
+import LoadingSpinner from '~/components/LoadingSpinner'
 
 export default {
-  components: { LostItem },
+  components: { LostItem, LoadingSpinner },
 
   data: () => ({
     lostItem: {},
@@ -17,27 +25,24 @@ export default {
     resolveError: {},
 
     getError: {},
+
+    loading: false,
   }),
 
   mounted() {
     this.$store.dispatch('setPageName', '')
 
-    this.lostItem = {
-      id: 1,
-      title: 'Dlugopis',
-      category: 'Akcesoria biurowe',
-      description: 'Zgubiony dlugopis wczoraj',
-      location: '1234 Fancy Ave',
-      date: '12-25-2019',
-    }
+    this.lostItem = {}
     this.getLostItem()
   },
 
   methods: {
     getLostItem() {
+      this.loading = true
       RestService.getLostItem(this.$axios, this.$route.params.id)
         .then((res) => {
           this.lostItem = res.data
+          this.loading = false
         })
         .catch((err) => {
           this.getError = err
