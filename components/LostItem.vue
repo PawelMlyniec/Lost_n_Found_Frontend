@@ -45,7 +45,11 @@ export default {
 
   computed: {
     isReporter() {
-      return this.lostItem.userId === this.$auth.user.sub
+      if (this.$auth.user) {
+        return this.lostItem.userId === this.$auth.user.sub
+      } else {
+        return false
+      }
     },
   },
 
