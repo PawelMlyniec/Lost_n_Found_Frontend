@@ -94,13 +94,15 @@
             ></v-textarea>
           </v-col>
         </v-row>
-       <v-checkbox
-        v-model="rodo_checkbox"
-        :label="`I accept RODO policy`"
-      >
-      </v-checkbox>
+        <v-checkbox v-model="rodo_checkbox" :label="`I accept RODO policy`">
+        </v-checkbox>
         <v-layout justify-center>
-          <v-btn v-if="rodo_checkbox" color="primary" @click.prevent="publish()">Post</v-btn>
+          <v-btn
+            :disabled="!rodo_checkbox"
+            color="primary"
+            @click.prevent="publish()"
+            >Post</v-btn
+          >
         </v-layout>
       </v-form>
     </v-card-text>
@@ -122,7 +124,7 @@ export default {
     entered_email: '',
     entered_phone: '',
     entered_title: '',
-    rodo_checkbox: 0,
+    rodo_checkbox: false,
   }),
   methods: {
     addTag(event) {
@@ -143,11 +145,12 @@ export default {
       }
     },
     publish() {
-      let dateFrom='', dateTo=''
+      let dateFrom = ''
+      let dateTo = ''
       if (this.selected_dates != null) {
         dateFrom = new Date(this.selected_dates[0]).toISOString()
-        if(this.selected_dates.length>1){
-        dateTo = new Date(this.selected_dates[1]).toISOString()
+        if (this.selected_dates.length > 1) {
+          dateTo = new Date(this.selected_dates[1]).toISOString()
         }
       }
       var body = {
@@ -155,11 +158,11 @@ export default {
         description: this.extra_comment,
         category: this.selected_category,
         dateFrom: dateFrom,
-        dateTo: dateTo, 
-        tags: this.tags
+        dateTo: dateTo,
+        tags: this.tags,
       }
 
-      RestService.addLostItemPost(this.$axios,body)
+      RestService.addLostItemPost(this.$axios, body)
         .then((res) => {
           this.$router.push({
             path: 'form_publish_success',
