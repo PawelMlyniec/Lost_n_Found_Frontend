@@ -18,21 +18,21 @@
         <br />
       </v-col>
     </v-card-text>
-    <v-template v-if="isReporter">
+    <template v-if="isReporter">
       <v-card-actions>
         <v-btn color="green" @click.prevent="resolvePost">Mark as found</v-btn>
         <v-spacer />
         <v-btn @click.prevent="editPost()">Edit post</v-btn>
         <v-btn color="red" @click.prevent="deletePost">Delete post</v-btn>
       </v-card-actions>
-    </v-template>
-    <v-template v-else>
+    </template>
+    <template v-else>
       <v-card-actions>
         <v-btn color="priamry" @click.prevent="contactReporter"
           >Contact reporter</v-btn
         >
       </v-card-actions>
-    </v-template>
+    </template>
   </v-card>
 </template>
 
