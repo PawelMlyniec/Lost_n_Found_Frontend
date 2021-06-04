@@ -39,6 +39,13 @@ export default {
     )
   },
 
+  getFoundItems(axios, page, size, body) {
+    return axios.post(
+      '/foundReports/searches?page=' + page + '&size=' + size,
+      body
+    )
+  },
+
   addLostItemPost(axios, { title, description, category, dateFrom, dateTo, tags }) {
     return axios.post(
       '/lostReports',
@@ -56,6 +63,26 @@ export default {
       
     )
   },
+
+  addFoundItemPost(axios, { title, description, category, foundDate, telephoneNumber,emailAddress,city   }) {
+    return axios.post(
+      '/foundReports',
+      {
+        title,
+        description,
+        category,
+        foundDate,
+        telephoneNumber,
+        emailAddress,
+        city
+      },
+      {
+        headers: this.getAuthHeader(),
+      },
+      
+    )
+  },
+
 
   updateLostItem(axios, lostReportId, { title, description, category, dateFrom, dateTo }) {
     return axios.put(

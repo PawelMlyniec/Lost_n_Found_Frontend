@@ -3,6 +3,7 @@
     <v-form>
       <v-text-field v-model="titlePart" label="Title"></v-text-field>
       <v-text-field v-model="category" label="Category"></v-text-field>
+      <v-text-field v-model="city" label="City"></v-text-field>
       <v-menu
         ref="menuFrom"
         v-model="menuFrom"
@@ -13,8 +14,8 @@
       >
         <template #activator="{ on, attrs }">
           <v-text-field
-            v-model="reportedFrom"
-            label="Lost from"
+            v-model="foundDate"
+            label="Found date"
             prepend-icon="mdi-calendar"
             readonly
             v-bind="attrs"
@@ -23,59 +24,31 @@
         </template>
         <v-date-picker
           ref="picker"
-          v-model="reportedFrom"
+          v-model="foundDate"
           :max="new Date().toISOString()"
           min="2020-04-18T12:50:17.876Z"
           @change="saveFrom"
         ></v-date-picker>
       </v-menu>
-      <v-menu
-        ref="menuTo"
-        v-model="menuTo"
-        :close-on-content-click="false"
-        transition="scale-transition"
-        offset-y
-        min-width="auto"
-      >
-        <template #activator="{ on, attrs }">
-          <v-text-field
-            v-model="reportedTo"
-            label="Lost to"
-            prepend-icon="mdi-calendar"
-            readonly
-            v-bind="attrs"
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker
-          ref="picker"
-          v-model="reportedTo"
-          :max="new Date().toISOString()"
-          min="2020-04-18T12:50:17.876Z"
-          @change="saveTo"
-        ></v-date-picker>
-      </v-menu>
-          <v-col cols="12" md="6">
-            <div class="tag-input">
-              <div
-                v-for="(tag, index) in tags"
-                :key="tag"
-                class="tag-input__tag"
-              >
-                <span @click="removeTag(index)">x</span>
-                {{ tag }}
-              </div>
-              <input
-                type="text"
-                placeholder="Enter Tags"
-                class="tag-input__text"
-                @keydown.enter="addTag"
-                @keydown.188="addTag"
-                @keydown.delete="removeLastTag"
-              />
-            </div>
-          </v-col>
-          <br/>
+      
+     <!-- <v-col cols="12" md="6">
+        <div class="tag-input">
+          <div v-for="(tag, index) in tags" :key="tag" class="tag-input__tag">
+            <span @click="removeTag(index)">x</span>
+            {{ tag }}
+          </div>
+          <input
+            type="text"
+            placeholder="Enter Tags"
+            class="tag-input__text"
+            @keydown.enter="addTag"
+            @keydown.188="addTag"
+            @keydown.delete="removeLastTag"
+          />
+        </div>
+      </v-col>-->
+
+      <br />
     </v-form>
     <v-card
       class="d-flex justify-center mb-6"
@@ -88,17 +61,14 @@
     <v-data-table
       :hide-default-footer="true"
       :headers="headers"
-      :items="lostItems"
+      :items="foundItems"
       :sort-by="'dateFrom'"
       :sort-desc="true"
       @click:row="rowClick"
     >
-    <template v-slot:item.dateFrom="{ item }">
-    <span>{{ item.dateFrom | formatDate }}</span>
-  </template>
-      <template v-slot:item.dateTo="{ item }">
-    <span>{{ item.dateTo | formatDate }}</span>
-  </template>
+      <template v-slot:item.foundDate="{ item }">
+        <span>{{ item.foundDate | formatDate }}</span>
+      </template>
     </v-data-table>
     <v-row>
       <v-col class="text-left">
@@ -111,14 +81,14 @@
       </v-col>
       <v-col class="text-right">
         <v-btn
-          v-if="lostItems.length ==10"
+          v-if="foundItems.length == 10"
           color="primary"
           @click.prevent="nextPage()"
           >Natępna strona</v-btn
         >
       </v-col>
     </v-row>
-    <br/>
+    <br />
   </v-card>
 </template>
 
@@ -131,19 +101,16 @@ export default {
       { text: 'Title', value: 'title' },
       { text: 'Description', value: 'description' },
       { text: 'Category', value: 'category' },
-      { text: 'dateFrom', value: 'dateFrom'  },
-      { text: 'dateTo', value: 'dateTo' },
-      { text: 'Tags', value: 'tags' },
+      { text: 'foundDate', value: 'foundDate' },
+      { text: 'City', value: 'city' },
     ],
-    reportedFrom: null,
-    reportedTo: null,
-    lostItems: [],
+    foundDate: null,
+    foundItems: [],
     titlePart: '',
     category: '',
     menuFrom: false,
-    menuTo: false,
     currentPage: 0,
-    tags: [],
+    city: '',
   }),
 
   watch: {
@@ -155,16 +122,15 @@ export default {
   mounted() {
     const body = {
       titleFragment: '',
-      reportedFrom: '',
-      reportedTo: '',
+      foundDate: '',
       category: '',
-      tags:[],
+      city: '',
     }
     // RestService.getToken(this.$axios).then((res) => {
     // console.log(res)
-    RestService.getLostItems(this.$axios, 0, 10, body)
+    RestService.getFoundItems(this.$axios, 0, 10, body)
       .then((res) => {
-        this.lostItems = res.data.content
+        this.foundItems = res.data.content
       })
       .catch((err) => {
         this.getError = err
@@ -192,7 +158,7 @@ export default {
     },
     rowClick(row) {
       console.log('asd', row)
-      this.$router.push(`/lost_item/${row.lostReportId}`)
+      this.$router.push(`/found_item/${row.lostReportId}`)
     },
     saveTo(date) {
       this.$refs.menuTo.save(date)
@@ -201,51 +167,43 @@ export default {
       this.$refs.menuFrom.save(date)
     },
     nextPage() {
-      let dateFrom, dateTo
-      if (this.reportedFrom != null) {
-        dateFrom = new Date(this.reportedFrom).toISOString()
-      }
-      if (this.reportedTo != null) {
-        dateTo = new Date(this.reportedTo).toISOString()
+      let foundDate
+      if (this.foundDate != null) {
+        foundDate = new Date(this.foundDate).toISOString()
       }
       let body = {
         titleFragment: this.titlePart,
-        reportedFrom: dateFrom,
-        reportedTo: dateTo,
+        foundDate: foundDate,
         category: this.category,
-        tags:this.tags
+        city: this.city,
       }
       this.currentPage = this.currentPage + 1
 
-      RestService.getLostItems(this.$axios, this.currentPage, 10, body)
+      RestService.getFoundItems(this.$axios, this.currentPage, 10, body)
         .then((res) => {
-          this.lostItems = res.data.content
+          this.foundItems = res.data.content
         })
         .catch((err) => {
           this.getError = err
         })
     },
     prevPage() {
-      let dateFrom, dateTo
-      if (this.reportedFrom != null) {
-        dateFrom = new Date(this.reportedFrom).toISOString()
-      }
-      if (this.reportedTo != null) {
-        dateTo = new Date(this.reportedTo).toISOString()
+      let foundDate
+      if (this.foundDate != null) {
+        foundDate = new Date(this.foundDate).toISOString()
       }
       let body = {
         titleFragment: this.titlePart,
-        reportedFrom: dateFrom,
-        reportedTo: dateTo,
+        foundDate: foundDate,
         category: this.category,
-        tags:this.tags
+        city: this.city,
       }
       if (this.currentPage - 1 >= 0) {
         this.currentPage = this.currentPage - 1
       }
-      RestService.getLostItems(this.$axios, this.currentPage, 10, body)
+      RestService.getFoundItems(this.$axios, this.currentPage, 10, body)
         .then((res) => {
-          this.lostItems = res.data.content
+          this.foundItems = res.data.content
         })
         .catch((err) => {
           this.getError = err
@@ -253,23 +211,19 @@ export default {
     },
 
     search() {
-      let dateFrom, dateTo
-      if (this.reportedFrom != null) {
-        dateFrom = new Date(this.reportedFrom).toISOString()
-      }
-      if (this.reportedTo != null) {
-        dateTo = new Date(this.reportedTo).toISOString()
+      let foundDate
+      if (this.foundDate != null) {
+        foundDate = new Date(this.foundDate).toISOString()
       }
       let body = {
         titleFragment: this.titlePart,
-        reportedFrom: dateFrom,
-        reportedTo: dateTo,
+        foundDate: foundDate,
         category: this.category,
-        tags:this.tags
+        city: this.city,
       }
-      RestService.getLostItems(this.$axios, 0, 10, body)
+      RestService.getFoundItems(this.$axios, 0, 10, body)
         .then((res) => {
-          this.lostItems = res.data.content
+          this.foundItems = res.data.content
         })
         .catch((err) => {
           this.getError = err

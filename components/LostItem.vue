@@ -11,7 +11,7 @@
         <br />
         <span>Date to: {{ lostItem.dateTo | formatDate }}</span>
         <br />
-        <span>Date to: {{ lostItem.reportedAt | formatDate }}</span>
+        <span>Reported at: {{ lostItem.reportedAt | formatDate }}</span>
         <br />
         <span>Tags:</span>
         <span v-for="tag in lostItem.tags" :key="tag"> {{ tag }} / </span>

@@ -10,14 +10,18 @@
           <span>{{ pageName }}</span>
         </v-row>
         <v-row no-gutters justify="center" align="center">
+          <template v-if="loggedIn">
           <v-btn color="primary" class="mr-3" :to="'/lost_item/lost_item_form'"
-            >Add post</v-btn
+            >Add Lost post</v-btn
           >
+          <v-btn color="primary" class="mr-3" :to="'/found_item/found_item_form'"
+            >Add Found post</v-btn
+          >
+          </template>
           <v-btn
             text
             :to="'/found_item/list'"
             :ripple="false"
-            disabled
             class="mr-3"
             >Found</v-btn
           >
