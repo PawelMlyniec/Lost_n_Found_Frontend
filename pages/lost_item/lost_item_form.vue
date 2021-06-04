@@ -38,11 +38,7 @@
             <v-subheader>Item category</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
-            <v-select
-              v-model="selected_category"
-              :items="categories"
-              label="Category"
-            ></v-select>
+            <v-text-field v-model="selected_category"></v-text-field>
           </v-col>
         </v-row>
         <v-row>
@@ -115,7 +111,6 @@ import RestService from '~/common/rest.service'
 export default {
   data: () => ({
     selected_dates: ['2021-09-10', '2021-09-20'],
-    categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
     cities: ['Warszawa', 'Gdańsk', 'Poznań', 'Kraków'],
     tags: [],
     extra_comment: '',

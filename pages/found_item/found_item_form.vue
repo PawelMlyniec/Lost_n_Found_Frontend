@@ -38,11 +38,7 @@
             <v-subheader>Item category</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
-            <v-select
-              v-model="selected_category"
-              :items="categories"
-              label="Category"
-            ></v-select>
+             <v-text-field v-model="selected_category" ></v-text-field>
           </v-col>
         </v-row>
         <!--<v-row>
