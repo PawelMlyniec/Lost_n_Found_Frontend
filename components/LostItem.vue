@@ -7,6 +7,8 @@
         <br />
         <span>Description: {{ lostItem.description }}</span>
         <br />
+        <span>Reported at: {{ lostItem.city }}</span>
+        <br />
         <span>Date from: {{ lostItem.dateFrom | formatDate }}</span>
         <br />
         <span>Date to: {{ lostItem.dateTo | formatDate }}</span>
@@ -15,6 +17,10 @@
         <br />
         <span>Tags:</span>
         <span v-for="tag in lostItem.tags" :key="tag"> {{ tag }} / </span>
+        <br />
+        <span>Email: {{ lostItem.emailAddress }}</span>
+        <br />
+        <span>Phone: {{ lostItem.telephoneNumber }}</span>
         <br />
       </v-col>
     </v-card-text>

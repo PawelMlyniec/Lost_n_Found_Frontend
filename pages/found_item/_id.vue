@@ -1,9 +1,12 @@
 <template>
   <div>
-    <template >
+    <template v-if="!loading">
       <v-row justify="center" class="mt-6">
         <found-item :found-item="foundItem" />
       </v-row>
+    </template>
+        <template v-else>
+      <loading-spinner />
     </template>
   </div>
 </template>
@@ -11,8 +14,9 @@
 <script>
 import FoundItem from '@/components/FoundItem'
 import RestService from '~/common/rest.service'
+import LoadingSpinner from '~/components/LoadingSpinner'
 export default {
-  components: { FoundItem},
+  components: { FoundItem, LoadingSpinner},
 
   data: () => ({
     foundItem: {},

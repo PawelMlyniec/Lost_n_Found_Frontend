@@ -160,12 +160,15 @@ export default {
         dateFrom: dateFrom,
         dateTo: dateTo,
         tags: this.tags,
+        city: this.selected_city,
+        telephoneNumber: this.entered_phone,
+        emailAddress: this.entered_email
       }
 
       RestService.addLostItemPost(this.$axios, body)
         .then((res) => {
           this.$router.push({
-            path: 'form_publish_success',
+            path: 'form_publish_success',params:{id: res.lostReportId}
           })
         })
         .catch((error) => {
@@ -173,11 +176,11 @@ export default {
         })
         .finally(() => {
           this.$router.push({
-            path: 'form_publish_success',
-          })
+            path: 'form_publish_success',params:{id: res.lostReportId}
+          }) 
         })
       this.$router.push({
-        path: 'form_publish_success',
+        path: 'form_publish_success',params:{id: res.lostReportId}
       })
     },
   },

@@ -68,8 +68,29 @@ export default {
       body
     )
   },
+  getMatchingFoundItems(axios,page, size, { title, description, category, dateFrom, dateTo, tags, city, telephoneNumber,emailAddress }) {
+    return axios.post(
+      '/fountReports/matching?page=' + page + '&size=' + size,
+      {
+        title,
+        description,
+        category,
+        dateFrom,
+        dateTo,
+        tags,
+        city, 
+        telephoneNumber,
+        emailAddress
+      },
+      {
+        headers: this.getAuthHeader(),
+      },
+      
+    )
+  },
 
-  addLostItemPost(axios, { title, description, category, dateFrom, dateTo, tags }) {
+
+  addLostItemPost(axios, { title, description, category, dateFrom, dateTo, tags, city, telephoneNumber,emailAddress }) {
     return axios.post(
       '/lostReports',
       {
@@ -78,7 +99,10 @@ export default {
         category,
         dateFrom,
         dateTo,
-        tags
+        tags,
+        city, 
+        telephoneNumber,
+        emailAddress
       },
       {
         headers: this.getAuthHeader(),
@@ -106,8 +130,7 @@ export default {
     )
   },
 
-
-  updateLostItem(axios, lostReportId, { title, description, category, dateFrom, dateTo }) {
+  updateLostItem(axios, lostReportId, { title, description, category, dateFrom, dateTo, city, tags, emailAddress,telephoneNumber}) {
     return axios.put(
       `/lostReports/${lostReportId}`,
       {
@@ -115,7 +138,11 @@ export default {
         description,
         category,
         dateFrom,
-        dateTo
+        dateTo,
+        city, 
+        tags, 
+        emailAddress,
+        telephoneNumber
       },
       {
         withCredentials: true,

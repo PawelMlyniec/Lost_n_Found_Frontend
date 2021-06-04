@@ -35,11 +35,7 @@
               <v-subheader>City in which you lost the item</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
-              <v-select
-                v-model="selected_city"
-                :items="cities"
-                label="City"
-              ></v-select>
+              <v-text-field v-model="selected_city"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
@@ -97,7 +93,6 @@ export default {
     return {
       lostItem: {},
       selected_dates: ['', ''],
-      cities: ['Warszawa', 'Gdańsk', 'Poznań', 'Kraków'],
       selected_city: '',
       category: '',
       entered_email: '',
@@ -143,6 +138,9 @@ export default {
           this.selected_dates[0] = this.lostItem.dateFrom
           this.selected_dates[1] = this.lostItem.dateTo
           this.tags = this.lostItem.tags
+          this.entered_email=this.lostItem.emailAddress
+          this.entered_phone=this.lostReportId.telephoneNumber
+          this.selected_city=this.lostItem.city
           if (res.data.dateFrom != '') {
             var date = new Date(res.data.dateFrom)
             var year = date.getFullYear()
@@ -192,21 +190,21 @@ export default {
         category: this.description,
         dateFrom: dateFrom,
         dateTo: dateTo,
+        city: this.selected_city,
+        tags: this.tags,
+        emailAddress: this.entered_email,
+        telephoneNumber: this.entered_phone
       }
 
       RestService.updateLostItem(this.$axios, this.$route.params.id, body)
         .then((res) => {
-          this.$router.push({
-            path: '' + this.lostItem.lostReportId,
-          })
+          this.$router.push(`/lost_item/edited_post`)
         })
         .catch((error) => {
           // error.response.status Check status code
         })
         .finally(() => {
-          this.$router.push({
-            path: '' + this.$route.params.id,
-          })
+          this.$router.push('/lost_item/edited_post')
         })
     },
   },
