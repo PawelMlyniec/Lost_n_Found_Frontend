@@ -70,7 +70,7 @@ export default {
   },
   getMatchingFoundItems(axios,page, size, { title, description, category, dateFrom, dateTo, tags, city, telephoneNumber,emailAddress }) {
     return axios.post(
-      '/fountReports/matching?page=' + page + '&size=' + size,
+      '/foundReports/matching?page=' + page + '&size=' + size,
       {
         title,
         description,
