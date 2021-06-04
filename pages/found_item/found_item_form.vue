@@ -30,7 +30,7 @@
             <v-subheader>Date when object was found</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
-            <v-date-picker v-model="selected_dates" range></v-date-picker>
+            <v-date-picker v-model="selected_dates" ></v-date-picker>
           </v-col>
         </v-row>
         <v-row>
@@ -38,7 +38,7 @@
             <v-subheader>Item category</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
-             <v-text-field v-model="selected_category" ></v-text-field>
+             <v-select v-model="selected_category" :items="categories" ></v-select>
           </v-col>
         </v-row>
         <!--<v-row>
@@ -110,8 +110,9 @@ import RestService from '~/common/rest.service'
 
 export default {
   data: () => ({
-    selected_dates: ['2021-09-10', '2021-09-20'],
+    selected_dates: '2021-09-10',
     cities: ['Warszawa', 'Gdańsk', 'Poznań', 'Kraków'],
+    categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
     tags: [],
     extra_comment: '',
     selected_city: '',
@@ -142,7 +143,7 @@ export default {
     publish() {
       let foundDate = ''
       if (this.selected_dates != null) {
-        foundDate = new Date(this.selected_dates[0]).toISOString()
+        foundDate = new Date(this.selected_dates).toISOString()
       }
       var body = {
         title: this.entered_title,

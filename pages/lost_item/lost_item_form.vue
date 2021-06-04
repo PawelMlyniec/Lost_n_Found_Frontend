@@ -1,5 +1,5 @@
-<template>
-  <v-card>
+<template >
+  <v-card v-if='sent==false'>
     <v-card-title class="headline justify-center mb-1">
       Fill in the lost item form
     </v-card-title>
@@ -38,7 +38,7 @@
             <v-subheader>Item category</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field v-model="selected_category"></v-text-field>
+            <v-select :items="categories" v-model="selected_category"></v-select>
           </v-col>
         </v-row>
         <v-row>
@@ -103,6 +103,22 @@
       </v-form>
     </v-card-text>
   </v-card>
+  <v-card v-else class="mt-6">
+    <v-card-title>Post has been added successfully</v-card-title>
+    <v-card-title>Top found items that match your post:</v-card-title>
+    <v-data-table
+      :hide-default-footer="true"
+      :headers="headers"
+      :items="foundItems"
+      :sort-by="'foundDate'"
+      :sort-desc="true"
+      @click:row="rowClick"
+    >
+      <template v-slot:item.foundDate="{ item }">
+        <span>{{ item.foundDate | formatDate }}</span>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
@@ -110,6 +126,7 @@ import RestService from '~/common/rest.service'
 
 export default {
   data: () => ({
+    categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
     selected_dates: ['2021-09-10', '2021-09-20'],
     cities: ['Warszawa', 'Gdańsk', 'Poznań', 'Kraków'],
     tags: [],
@@ -120,8 +137,22 @@ export default {
     entered_phone: '',
     entered_title: '',
     rodo_checkbox: false,
+    sent:false,
+    foundItems: [],
+        headers: [
+      // { text: 'id', value: 'lostReportId' },
+      { text: 'Title', value: 'title' },
+      { text: 'Description', value: 'description' },
+      { text: 'Category', value: 'category' },
+      { text: 'foundDate', value: 'foundDate' },
+      { text: 'City', value: 'city' },
+    ],
   }),
   methods: {
+        rowClick(row) {
+      console.log('asd', row)
+      this.$router.push(`/found_item/${row.id}`)
+    },
     addTag(event) {
       event.preventDefault()
       const val = event.target.value.trim()
@@ -161,29 +192,32 @@ export default {
       }
       RestService.addLostItemPost(this.$axios, body)
         .then((res) => {
-                    this.$router.push({
-            path: 'form_publish_success',
-          })
+                 //   this.$router.push({
+           // path: 'form_publish_success',
+         // })
         })
         .catch((error) => {
           //error.response.status Check status code
         })
         .finally(() => {
-                    this.$router.push({
-            path: 'form_publish_success',
-          })
+               //     this.$router.push({
+           // path: 'form_publish_success',
+         // })
         })
-                  this.$router.push({
-            path: 'form_publish_success',
-          })
-     //RestService.getMatchingFoundItems(this.$axios,0,20, body)
-      //  .then((res) => {
-      //  })
-      //  .catch((error) => {
+               //   this.$router.push({
+         //  path: 'form_publish_success',
+         // })
+    
+      RestService.getMatchingFoundItems(this.$axios,0,20, body)
+        .then((res) => {
+           this.foundItems = res.data.content
+        })
+        .catch((error) => {
           //error.response.status Check status code
-      //  })
-      //  .finally(() => {
-      //  })
+        })
+        .finally(() => {
+        })
+      this.sent=true
   },
   }
 }

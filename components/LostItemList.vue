@@ -55,27 +55,23 @@
           @change="saveTo"
         ></v-date-picker>
       </v-menu>
-          <v-col cols="12" md="6">
-            <div class="tag-input">
-              <div
-                v-for="(tag, index) in tags"
-                :key="tag"
-                class="tag-input__tag"
-              >
-                <span @click="removeTag(index)">x</span>
-                {{ tag }}
-              </div>
-              <input
-                type="text"
-                placeholder="Enter Tags"
-                class="tag-input__text"
-                @keydown.enter="addTag"
-                @keydown.188="addTag"
-                @keydown.delete="removeLastTag"
-              />
-            </div>
-          </v-col>
-          <br/>
+      <v-col cols="12" md="6">
+        <div class="tag-input">
+          <div v-for="(tag, index) in tags" :key="tag" class="tag-input__tag">
+            <span @click="removeTag(index)">x</span>
+            {{ tag }}
+          </div>
+          <input
+            type="text"
+            placeholder="Enter Tags"
+            class="tag-input__text"
+            @keydown.enter="addTag"
+            @keydown.188="addTag"
+            @keydown.delete="removeLastTag"
+          />
+        </div>
+      </v-col>
+      <br />
     </v-form>
     <v-card
       class="d-flex justify-center mb-6"
@@ -93,12 +89,12 @@
       :sort-desc="true"
       @click:row="rowClick"
     >
-    <template v-slot:item.dateFrom="{ item }">
-    <span>{{ item.dateFrom | formatDate }}</span>
-  </template>
+      <template v-slot:item.dateFrom="{ item }">
+        <span>{{ item.dateFrom | formatDate }}</span>
+      </template>
       <template v-slot:item.dateTo="{ item }">
-    <span>{{ item.dateTo | formatDate }}</span>
-  </template>
+        <span>{{ item.dateTo | formatDate }}</span>
+      </template>
     </v-data-table>
     <v-row>
       <v-col class="text-left">
@@ -111,14 +107,14 @@
       </v-col>
       <v-col class="text-right">
         <v-btn
-          v-if="lostItems.length ==10"
+          v-if="lostItems.length == 10"
           color="primary"
           @click.prevent="nextPage()"
           >Natępna strona</v-btn
         >
       </v-col>
     </v-row>
-    <br/>
+    <br />
   </v-card>
 </template>
 
@@ -131,9 +127,10 @@ export default {
       { text: 'Title', value: 'title' },
       { text: 'Description', value: 'description' },
       { text: 'Category', value: 'category' },
-      { text: 'dateFrom', value: 'dateFrom'  },
+      { text: 'dateFrom', value: 'dateFrom' },
       { text: 'dateTo', value: 'dateTo' },
       { text: 'Tags', value: 'tags' },
+      { text: 'City', value: 'city' },
     ],
     reportedFrom: null,
     reportedTo: null,
@@ -144,6 +141,7 @@ export default {
     menuTo: false,
     currentPage: 0,
     tags: [],
+    city:'',
   }),
 
   watch: {
@@ -158,7 +156,8 @@ export default {
       reportedFrom: '',
       reportedTo: '',
       category: '',
-      tags:[],
+      tags: [],
+      city:''
     }
     // RestService.getToken(this.$axios).then((res) => {
     // console.log(res)
@@ -213,7 +212,8 @@ export default {
         reportedFrom: dateFrom,
         reportedTo: dateTo,
         category: this.category,
-        tags:this.tags
+        tags: this.tags,
+        city:this.city
       }
       this.currentPage = this.currentPage + 1
 
@@ -238,7 +238,8 @@ export default {
         reportedFrom: dateFrom,
         reportedTo: dateTo,
         category: this.category,
-        tags:this.tags
+        tags: this.tags,
+        city:this.city
       }
       if (this.currentPage - 1 >= 0) {
         this.currentPage = this.currentPage - 1
@@ -265,7 +266,8 @@ export default {
         reportedFrom: dateFrom,
         reportedTo: dateTo,
         category: this.category,
-        tags:this.tags
+        tags: this.tags,
+        city:this.city
       }
       RestService.getLostItems(this.$axios, 0, 10, body)
         .then((res) => {

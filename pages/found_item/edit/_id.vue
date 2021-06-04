@@ -19,7 +19,7 @@
               <v-subheader>found date</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
-              <v-date-picker v-model="selected_dates" range></v-date-picker>
+              <v-date-picker v-model="selected_dates" ></v-date-picker>
             </v-col>
           </v-row>
           <v-row>
@@ -27,7 +27,7 @@
               <v-subheader>Item category</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
-              <v-text-field v-model="category" label="Category"></v-text-field>
+              <v-select v-model="category" :items="categories"></v-select>
             </v-col>
           </v-row>
           <v-row>
@@ -103,8 +103,10 @@ import RestService from '~/common/rest.service'
 export default {
   data() {
     return {
+      
+      categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
       lostItem: {},
-      selected_dates: ['', ''],
+      selected_dates: '',
       selected_city: '',
       category: '',
       email: '',
@@ -166,7 +168,7 @@ export default {
             if (month < 10) {
               month = '0' + month
             }
-            this.selected_dates[0] = year + '-' + month + '-' + dt
+            this.selected_dates= year + '-' + month + '-' + dt
           }
           
         })
@@ -178,7 +180,7 @@ export default {
     update() {
       let foundDate = ''
       if (this.selected_dates != null) {
-        foundDate = new Date(this.selected_dates[0]).toISOString()
+        foundDate = new Date(this.selected_dates).toISOString()
       }
       var body = {
         title: this.title,

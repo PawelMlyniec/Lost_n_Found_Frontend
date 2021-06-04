@@ -27,7 +27,7 @@
               <v-subheader>Item category</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
-              <v-text-field v-model="category" label="Category"></v-text-field>
+              <v-select v-model="category" :items="categories"></v-select>
             </v-col>
           </v-row>
           <v-row>
@@ -91,6 +91,8 @@ import RestService from '~/common/rest.service'
 export default {
   data() {
     return {
+      
+      categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
       lostItem: {},
       selected_dates: ['', ''],
       selected_city: '',
