@@ -111,7 +111,6 @@ import RestService from '~/common/rest.service'
 export default {
   data: () => ({
     selected_dates: ['2021-09-10', '2021-09-20'],
-    categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
     cities: ['Warszawa', 'Gdańsk', 'Poznań', 'Kraków'],
     tags: [],
     extra_comment: '',

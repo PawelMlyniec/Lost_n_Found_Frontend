@@ -159,24 +159,19 @@ export default {
         telephoneNumber: this.entered_phone,
         emailAddress: this.entered_email
       }
-
+      var id=''
       RestService.addLostItemPost(this.$axios, body)
         .then((res) => {
-          this.$router.push({
-            path: 'form_publish_success',params:{id: res.lostReportId}
-          })
+          id=res.data.content.lostReportId
+          this.$router.push(`/lost_item/form_publish_success/${id}`)
         })
         .catch((error) => {
           // error.response.status Check status code
         })
         .finally(() => {
-          this.$router.push({
-            path: 'form_publish_success',params:{id: res.lostReportId}
-          }) 
+          this.$router.push(`/lost_item/form_publish_success/${id}`)
         })
-      this.$router.push({
-        path: 'form_publish_success',params:{id: res.lostReportId}
-      })
+      this.$router.push(`/lost_item/form_publish_success/${id}`)
     },
   },
 }
