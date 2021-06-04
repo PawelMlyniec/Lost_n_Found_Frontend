@@ -62,7 +62,7 @@
       :hide-default-footer="true"
       :headers="headers"
       :items="foundItems"
-      :sort-by="'dateFrom'"
+      :sort-by="'foundDate'"
       :sort-desc="true"
       @click:row="rowClick"
     >
@@ -158,10 +158,7 @@ export default {
     },
     rowClick(row) {
       console.log('asd', row)
-      this.$router.push(`/found_item/${row.lostReportId}`)
-    },
-    saveTo(date) {
-      this.$refs.menuTo.save(date)
+      this.$router.push(`/found_item/${row.id}`)
     },
     saveFrom(date) {
       this.$refs.menuFrom.save(date)

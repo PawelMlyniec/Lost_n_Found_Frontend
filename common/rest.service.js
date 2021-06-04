@@ -13,10 +13,25 @@ export default {
       headers: this.getAuthHeader(),
     })
   },
-
+  getFoundItem(axios, id) {
+    return axios.get(`/foundReports/${id}`, {
+      withCredentials: true,
+      headers: this.getAuthHeader(),
+    })
+  },
   resolveLostItem(axios, id) {
     return axios.post(
       `/lostReports/${id}/resolve`,
+      {},
+      {
+        withCredentials: true,
+        headers: this.getAuthHeader(),
+      }
+    )
+  },
+  resolveFoundItem(axios, id) {
+    return axios.post(
+      `/foundReports/${id}/resolve`,
       {},
       {
         withCredentials: true,
@@ -31,6 +46,14 @@ export default {
       headers: this.getAuthHeader(),
     })
   },
+
+  deleteFoundItem(axios, id) {
+    return axios.delete(`/foundReports/${id}`, {
+      withCredentials: true,
+      headers: this.getAuthHeader(),
+    })
+  },
+
 
   getLostItems(axios, page, size, body) {
     return axios.post(
@@ -93,6 +116,24 @@ export default {
         category,
         dateFrom,
         dateTo
+      },
+      {
+        withCredentials: true,
+        headers: this.getAuthHeader(),
+      }
+    )
+  },
+  updateFoundItem(axios, id, { title, description, category, foundDate, city, emailAddress, telephoneNumber }) {
+    return axios.put(
+      `/foundReports/${id}`,
+      {
+        title,
+        description,
+        category, 
+        foundDate, 
+        city, 
+        emailAddress, 
+        telephoneNumber
       },
       {
         withCredentials: true,

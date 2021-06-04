@@ -1,26 +1,21 @@
 <template>
   <div>
-    <template v-if="!loading">
+    <template >
       <v-row justify="center" class="mt-6">
-        <lost-item :lost-item="lostItem" />
+        <found-item :found-item="foundItem" />
       </v-row>
-    </template>
-    <template v-else>
-      <loading-spinner />
     </template>
   </div>
 </template>
 
 <script>
-import LostItem from '@/components/LostItem'
+import FoundItem from '@/components/FoundItem'
 import RestService from '~/common/rest.service'
-import LoadingSpinner from '~/components/LoadingSpinner'
-
 export default {
-  components: { LostItem, LoadingSpinner },
+  components: { FoundItem},
 
   data: () => ({
-    lostItem: {},
+    foundItem: {},
     deleteError: {},
     resolveError: {},
 
@@ -32,16 +27,16 @@ export default {
   mounted() {
     this.$store.dispatch('setPageName', '')
 
-    this.lostItem = {}
-    this.getLostItem()
+    this.foundItem = {}
+    this.getFoundItem()
   },
 
   methods: {
-    getLostItem() {
+    getFoundItem() {
       this.loading = true
-      RestService.getLostItem(this.$axios, this.$route.params.id)
+      RestService.getFoundItem(this.$axios, this.$route.params.id)
         .then((res) => {
-          this.lostItem = res.data
+          this.foundItem = res.data
           this.loading = false
         })
         .catch((err) => {

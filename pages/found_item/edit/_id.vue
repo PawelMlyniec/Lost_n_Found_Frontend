@@ -2,7 +2,7 @@
   <v-row justify="center" align="center">
     <v-card>
       <v-card-title
-        >Edit lost item post</v-card-title
+        >Edit found item post</v-card-title
       >
       <v-card-text>
         <v-form>
@@ -16,7 +16,7 @@
           </v-row>
           <v-row>
             <v-col cols="12" md="4">
-              <v-subheader>Lost date</v-subheader>
+              <v-subheader>found date</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
               <v-date-picker v-model="selected_dates" range></v-date-picker>
@@ -32,7 +32,7 @@
           </v-row>
           <v-row>
             <v-col cols="12" md="4">
-              <v-subheader>City in which you lost the item</v-subheader>
+              <v-subheader>City in which you found the item</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
               <v-select
@@ -55,6 +55,18 @@
             </v-col>
           </v-row>
           <v-row>
+          <v-col cols="12" md="4">
+            <v-subheader>Contact info</v-subheader>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field v-model="email" label="E-mail"></v-text-field>
+            <v-text-field
+              v-model="phone"
+              label="Phone number"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+          <!--<v-row>
             <v-col cols="12" md="4">
               <v-subheader>Additional tags</v-subheader>
             </v-col>
@@ -78,7 +90,7 @@
                 />
               </div>
             </v-col>
-          </v-row>
+          </v-row>-->
           <br /><br /><br />
           <v-layout justify-center>
             <v-btn color="primary" @click.prevent="update()">Update</v-btn>
@@ -100,14 +112,17 @@ export default {
       cities: ['Warszawa', 'Gdańsk', 'Poznań', 'Kraków'],
       selected_city: '',
       category: '',
-      entered_email: '',
-      entered_phone: '',
+      email: '',
+      phone: '',
       title: '',
       description: '',
       form: {
         title: '',
         description: '',
         category: '',
+        city:'',
+        email:'',
+        phone: ''
       },
       tags: [],
     }
@@ -134,17 +149,18 @@ export default {
       }
     },
     getPost() {
-      RestService.getLostItem(this.$axios, this.$route.params.id)
+      RestService.getFoundItem(this.$axios, this.$route.params.id)
         .then((res) => {
           this.lostItem = res.data
           this.category = this.lostItem.category
           this.description = this.lostItem.description
           this.title = this.lostItem.title
-          this.selected_dates[0] = this.lostItem.dateFrom
-          this.selected_dates[1] = this.lostItem.dateTo
-          this.tags = this.lostItem.tags
-          if (res.data.dateFrom != '') {
-            var date = new Date(res.data.dateFrom)
+          this.selected_dates[1] = ''
+          this.city=this.lostItem.city
+          this.email=this.lostItem.emailAddress
+          this.phone=this.lostItem.telephoneNumber
+          if (res.data.foundDate != '') {
+            var date = new Date(res.data.foundDate)
             var year = date.getFullYear()
             var month = date.getMonth() + 1
             var dt = date.getDate()
@@ -157,20 +173,7 @@ export default {
             }
             this.selected_dates[0] = year + '-' + month + '-' + dt
           }
-          if (res.data.dateTo != '') {
-            var date = new Date(res.data.dateTo)
-            var year = date.getFullYear()
-            var month = date.getMonth() + 1
-            var dt = date.getDate()
-
-            if (dt < 10) {
-              dt = '0' + dt
-            }
-            if (month < 10) {
-              month = '0' + month
-            }
-            this.selected_dates[1] = year + '-' + month + '-' + dt
-          }
+          
         })
         .catch((err) => {
           // error occured
@@ -178,26 +181,24 @@ export default {
         })
     },
     update() {
-      let dateFrom = '',
-        dateTo = ''
+      let foundDate = ''
       if (this.selected_dates != null) {
-        dateFrom = new Date(this.selected_dates[0]).toISOString()
-        if (this.selected_dates.length > 1) {
-          dateTo = new Date(this.selected_dates[1]).toISOString()
-        }
+        foundDate = new Date(this.selected_dates[0]).toISOString()
       }
       var body = {
         title: this.title,
         description: this.category,
         category: this.description,
-        dateFrom: dateFrom,
-        dateTo: dateTo,
+        foundDate: foundDate,
+        city: this.city,
+        emailAddress:this.email,
+        telephoneNumber:this.phone
       }
 
-      RestService.updateLostItem(this.$axios, this.$route.params.id, body)
+      RestService.updateFoundItem(this.$axios, this.$route.params.id, body)
         .then((res) => {
           this.$router.push({
-            path: '' + this.lostItem.lostReportId,
+            path: '' + this.foundItem.id,
           })
         })
         .catch((error) => {
