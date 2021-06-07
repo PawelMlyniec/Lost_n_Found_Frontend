@@ -1,5 +1,10 @@
 <template>
-  <v-snackbar v-model="snackbar" multi-line timeout="-1">
+  <v-snackbar
+    v-if="accepted !== 'true'"
+    v-model="snackbar"
+    multi-line
+    timeout="-1"
+  >
     {{ cookiePolicy }} <a href="/COOKIES.pdf">Cookies policy</a>
     <template #action="{ attrs }">
       <v-btn
@@ -11,9 +16,7 @@
       >
         Close
       </v-btn>
-      <v-btn color="primary" v-bind="attrs" @click="snackbar = false">
-        Accept
-      </v-btn>
+      <v-btn color="primary" v-bind="attrs" @click="close">Accept</v-btn>
     </template>
   </v-snackbar>
 </template>
@@ -26,8 +29,21 @@ export default {
       'This website uses cookies so that we can provide you with the best user experience. See our ',
   }),
 
+  computed: {
+    accepted() {
+      return localStorage.getItem('cookies_accept')
+    },
+  },
+
   mounted() {
     this.snackbar = true
+  },
+
+  methods: {
+    close() {
+      localStorage.setItem('cookies_accept', 'true')
+      this.snackbar = false
+    },
   },
 }
 </script>

@@ -2,39 +2,46 @@
   <v-app dark>
     <v-app-bar dense app>
       <v-row no-gutters>
-        <v-row align="center">
-          <v-btn icon to="/" :ripple="false" depressed class="ml-1 mr-4">
-            <v-icon>mdi-home</v-icon>
-          </v-btn>
+        <v-col cols="3" align-self="center">
+          <v-row align="center">
+            <v-btn icon to="/" :ripple="false" depressed class="ml-1 mr-4">
+              <v-icon>mdi-home</v-icon>
+            </v-btn>
 
-          <span>{{ pageName }}</span>
-        </v-row>
-        <v-row no-gutters justify="center" align="center">
-          <template v-if="loggedIn">
-          <v-btn color="primary" class="mr-3" :to="'/lost_item/lost_item_form'"
-            >Add Lost post</v-btn
-          >
-          <v-btn color="primary" class="mr-3" :to="'/found_item/found_item_form'"
-            >Add Found post</v-btn
-          >
-          </template>
-          <v-btn
-            text
-            :to="'/found_item/list'"
-            :ripple="false"
-            class="mr-3"
-            >Found</v-btn
-          >
-          <v-btn text :to="'/lost_item/list'" :ripple="false">Lost</v-btn>
-        </v-row>
-        <v-row justify="end" align="center" no-gutters>
-          <template v-if="!loggedIn">
-            <v-btn color="primary" class="mr-3" @click="login()">Login</v-btn>
-          </template>
-          <template v-else>
-            <v-btn color="primary" @click="logout()">Logout</v-btn>
-          </template>
-        </v-row>
+            <span>{{ pageName }}</span>
+          </v-row>
+        </v-col>
+        <v-col cols="6" align-self="center">
+          <v-row no-gutters justify="center" align="center">
+            <template v-if="loginStatus">
+              <v-btn color="primary" class="mr-4" :to="'/new'">Add post</v-btn>
+            </template>
+            <v-btn text :to="'/found_item/list'" :ripple="false" class="mr-4"
+              >Found</v-btn
+            >
+            <v-btn text :to="'/lost_item/list'" :ripple="false">Lost</v-btn>
+          </v-row>
+        </v-col>
+        <v-col cols="3">
+          <v-row justify="end" align="center" no-gutters>
+            <template v-if="!loginStatus">
+              <v-btn color="primary" @click="login">Login</v-btn>
+            </template>
+            <template v-else>
+              <v-btn icon :to="'/messages'" :ripple="false" class="mr-4">
+                <v-badge
+                  :content="unreadCount"
+                  :value="unreadCount"
+                  color="primary"
+                  overlap
+                >
+                  <v-icon>mdi-forum</v-icon>
+                </v-badge>
+              </v-btn>
+              <v-btn color="primary" @click="logout">Logout</v-btn>
+            </template>
+          </v-row>
+        </v-col>
       </v-row>
     </v-app-bar>
 
@@ -88,28 +95,49 @@
 
 <script>
 import CookieSnackbar from '~/components/CookieSnackbar.vue'
+import RestService from '~/common/rest.service.js'
 export default {
   components: { CookieSnackbar },
+
+  data: () => ({
+    loginStatus: false,
+    unreadCount: 0,
+  }),
 
   computed: {
     pageName() {
       return this.$store.getters.pageName
     },
+  },
 
-    loggedIn() {
-      return this.$auth.isAuthenticated
-    },
+  mounted() {
+    this.loggedIn()
   },
 
   methods: {
+    loggedIn() {
+      setTimeout(() => {
+        this.loginStatus = this.$auth.isAuthenticated
+        if (this.loginStatus) {
+          this.getUnreadCount()
+        }
+      }, 500)
+    },
+
+    getUnreadCount() {
+      RestService.getMessageUnreadCount(this.$axios, this.$auth.user.sub).then(
+        (res) => {
+          this.unreadCount = res.data
+        }
+      )
+    },
+
     login() {
       this.$auth.login()
     },
 
     logout() {
-      this.$auth.logout({
-        returnTo: 'http://http://35.198.161.140/',
-      })
+      this.$auth.logout()
     },
   },
 }

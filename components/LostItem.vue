@@ -33,21 +33,37 @@
       </v-card-actions>
     </template>
     <template v-else>
-      <v-card-actions>
-        <v-btn color="priamry" @click.prevent="contactReporter"
-          >Contact reporter</v-btn
-        >
-      </v-card-actions>
+      <template v-if="!writingNewMsg">
+        <v-card-actions>
+          <v-btn color="primary" @click="writingNewMsg = true"
+            >Contact reporter</v-btn
+          >
+        </v-card-actions>
+      </template>
+      <template v-else>
+        <new-message
+          closeable
+          @closeNewMsg="writingNewMsg = false"
+          @sendMessage="sendMessage"
+        />
+      </template>
     </template>
   </v-card>
 </template>
 
 <script>
+import NewMessage from '~/components/NewMessage'
 import RestService from '~/common/rest.service'
 export default {
+  components: { NewMessage },
+
   props: {
     lostItem: { type: Object, default: () => {} },
   },
+
+  data: () => ({
+    writingNewMsg: false,
+  }),
 
   computed: {
     isReporter() {
@@ -61,7 +77,6 @@ export default {
 
   methods: {
     resolvePost() {
-      // TODO: possibly temp
       RestService.resolveLostItem(this.$axios, this.lostItem.lostReportId).then(
         (res) => {
           this.$router.push('/lost_item/resolved_post')
@@ -79,6 +94,14 @@ export default {
           this.$router.push('deleted_post')
         }
       )
+    },
+
+    sendMessage(value) {
+      RestService.sendMessage(this.$axios, {
+        sourceUserId: this.$auth.user.sub,
+        targetUserId: this.lostItem.userId,
+        content: value,
+      })
     },
   },
 }

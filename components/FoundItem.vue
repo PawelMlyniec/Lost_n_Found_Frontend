@@ -7,11 +7,11 @@
         <br />
         <span>Description: {{ foundItem.description }}</span>
         <br />
-        <span>City: {{ foundItem.city}}</span>
+        <span>City: {{ foundItem.city }}</span>
         <br />
-        <span>Email: {{ foundItem.emailAddress}}</span>
+        <span>Email: {{ foundItem.emailAddress }}</span>
         <br />
-        <span>Phone: {{ foundItem.telephoneNumber}}</span>
+        <span>Phone: {{ foundItem.telephoneNumber }}</span>
         <br />
         <span>Found date: {{ foundItem.foundDate | formatDate }}</span>
         <br />
@@ -28,21 +28,37 @@
       </v-card-actions>
     </template>
     <template v-else>
-      <v-card-actions>
-        <v-btn color="priamry" @click.prevent="contactReporter"
-          >Contact reporter</v-btn
-        >
-      </v-card-actions>
+      <template v-if="!writingNewMsg">
+        <v-card-actions>
+          <v-btn color="primary" @click="writingNewMsg = true"
+            >Contact reporter</v-btn
+          >
+        </v-card-actions>
+      </template>
+      <template v-else>
+        <new-message
+          closeable
+          @closeNewMsg="writingNewMsg = false"
+          @sendMessage="sendMessage"
+        />
+      </template>
     </template>
   </v-card>
 </template>
 
 <script>
+import NewMessage from '~/components/NewMessage'
 import RestService from '~/common/rest.service'
 export default {
+  components: { NewMessage },
+
   props: {
     foundItem: { type: Object, default: () => {} },
   },
+
+  data: () => ({
+    writingNewMsg: false,
+  }),
 
   computed: {
     isReporter() {
@@ -74,6 +90,14 @@ export default {
           this.$router.push('deleted_post')
         }
       )
+    },
+
+    sendMessage(value) {
+      RestService.sendMessage(this.$axios, {
+        sourceUserId: this.$auth.user.sub,
+        targetUserId: this.foundItem.userId,
+        content: value,
+      })
     },
   },
 }

@@ -54,7 +54,6 @@ export default {
     })
   },
 
-
   getLostItems(axios, page, size, body) {
     return axios.post(
       '/lostReports/searches?page=' + page + '&size=' + size,
@@ -68,7 +67,22 @@ export default {
       body
     )
   },
-  getMatchingFoundItems(axios,page, size, { title, description, category, dateFrom, dateTo, tags, city, telephoneNumber,emailAddress }) {
+  getMatchingFoundItems(
+    axios,
+    page,
+    size,
+    {
+      title,
+      description,
+      category,
+      dateFrom,
+      dateTo,
+      tags,
+      city,
+      telephoneNumber,
+      emailAddress,
+    }
+  ) {
     return axios.post(
       '/foundReports/matching?page=' + page + '&size=' + size,
       {
@@ -78,19 +92,30 @@ export default {
         dateFrom,
         dateTo,
         tags,
-        city, 
+        city,
         telephoneNumber,
-        emailAddress
+        emailAddress,
       },
       {
         headers: this.getAuthHeader(),
-      },
-      
+      }
     )
   },
 
-
-  addLostItemPost(axios, { title, description, category, dateFrom, dateTo, tags, city, telephoneNumber,emailAddress }) {
+  addLostItemPost(
+    axios,
+    {
+      title,
+      description,
+      category,
+      dateFrom,
+      dateTo,
+      tags,
+      city,
+      telephoneNumber,
+      emailAddress,
+    }
+  ) {
     return axios.post(
       '/lostReports',
       {
@@ -100,18 +125,28 @@ export default {
         dateFrom,
         dateTo,
         tags,
-        city, 
+        city,
         telephoneNumber,
-        emailAddress
+        emailAddress,
       },
       {
         headers: this.getAuthHeader(),
-      },
-      
+      }
     )
   },
 
-  addFoundItemPost(axios, { title, description, category, foundDate, telephoneNumber,emailAddress,city   }) {
+  addFoundItemPost(
+    axios,
+    {
+      title,
+      description,
+      category,
+      foundDate,
+      telephoneNumber,
+      emailAddress,
+      city,
+    }
+  ) {
     return axios.post(
       '/foundReports',
       {
@@ -121,16 +156,29 @@ export default {
         foundDate,
         telephoneNumber,
         emailAddress,
-        city
+        city,
       },
       {
         headers: this.getAuthHeader(),
-      },
-      
+      }
     )
   },
 
-  updateLostItem(axios, lostReportId, { title, description, category, dateFrom, dateTo, city, tags, emailAddress,telephoneNumber}) {
+  updateLostItem(
+    axios,
+    lostReportId,
+    {
+      title,
+      description,
+      category,
+      dateFrom,
+      dateTo,
+      city,
+      tags,
+      emailAddress,
+      telephoneNumber,
+    }
+  ) {
     return axios.put(
       `/lostReports/${lostReportId}`,
       {
@@ -139,10 +187,10 @@ export default {
         category,
         dateFrom,
         dateTo,
-        city, 
-        tags, 
+        city,
+        tags,
         emailAddress,
-        telephoneNumber
+        telephoneNumber,
       },
       {
         withCredentials: true,
@@ -150,20 +198,75 @@ export default {
       }
     )
   },
-  updateFoundItem(axios, id, { title, description, category, foundDate, city, emailAddress, telephoneNumber }) {
+  updateFoundItem(
+    axios,
+    id,
+    {
+      title,
+      description,
+      category,
+      foundDate,
+      city,
+      emailAddress,
+      telephoneNumber,
+    }
+  ) {
     return axios.put(
       `/foundReports/${id}`,
       {
         title,
         description,
-        category, 
-        foundDate, 
-        city, 
-        emailAddress, 
-        telephoneNumber
+        category,
+        foundDate,
+        city,
+        emailAddress,
+        telephoneNumber,
       },
       {
         withCredentials: true,
+        headers: this.getAuthHeader(),
+      }
+    )
+  },
+
+  getMessageUnreadCount(axios, id) {
+    return axios.get(
+      `http://localhost:7070/textMessages/unread?id=${encodeURIComponent(id)}`,
+      {
+        headers: this.getAuthHeader(),
+      }
+    )
+  },
+
+  getMessages(axios, id) {
+    return axios.get(
+      `http://localhost:7070/textMessages/chats?id=${encodeURIComponent(id)}`,
+      {
+        headers: this.getAuthHeader(),
+      }
+    )
+  },
+
+  getChatBetweenUsers(axios, userId, targetUserId) {
+    return axios.get(
+      `http://localhost:7070/textMessages?firstUserId=${encodeURIComponent(
+        userId
+      )}&secondUserId=${encodeURIComponent(targetUserId)}`,
+      {
+        headers: this.getAuthHeader(),
+      }
+    )
+  },
+
+  sendMessage(axios, { sourceUserId, targetUserId, content }) {
+    return axios.post(
+      `http://localhost:7070/textMessages`,
+      {
+        sourceUserId,
+        targetUserId,
+        content,
+      },
+      {
         headers: this.getAuthHeader(),
       }
     )

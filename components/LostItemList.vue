@@ -1,126 +1,141 @@
 <template>
-  <v-card class="mt-6">
-    <v-form>
-      <v-text-field v-model="titlePart" label="Title"></v-text-field>
-      <v-text-field v-model="category" label="Category"></v-text-field>
-      <v-menu
-        ref="menuFrom"
-        v-model="menuFrom"
-        :close-on-content-click="false"
-        transition="scale-transition"
-        offset-y
-        min-width="auto"
-      >
-        <template #activator="{ on, attrs }">
-          <v-text-field
-            v-model="reportedFrom"
-            label="Lost from"
-            prepend-icon="mdi-calendar"
-            readonly
-            v-bind="attrs"
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker
-          ref="picker"
-          v-model="reportedFrom"
-          :max="new Date().toISOString()"
-          min="2020-04-18T12:50:17.876Z"
-          @change="saveFrom"
-        ></v-date-picker>
-      </v-menu>
-      <v-menu
-        ref="menuTo"
-        v-model="menuTo"
-        :close-on-content-click="false"
-        transition="scale-transition"
-        offset-y
-        min-width="auto"
-      >
-        <template #activator="{ on, attrs }">
-          <v-text-field
-            v-model="reportedTo"
-            label="Lost to"
-            prepend-icon="mdi-calendar"
-            readonly
-            v-bind="attrs"
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker
-          ref="picker"
-          v-model="reportedTo"
-          :max="new Date().toISOString()"
-          min="2020-04-18T12:50:17.876Z"
-          @change="saveTo"
-        ></v-date-picker>
-      </v-menu>
-      <v-col cols="12" md="6">
-        <div class="tag-input">
-          <div v-for="(tag, index) in tags" :key="tag" class="tag-input__tag">
-            <span @click="removeTag(index)">x</span>
-            {{ tag }}
-          </div>
-          <input
-            type="text"
-            placeholder="Enter Tags"
-            class="tag-input__text"
-            @keydown.enter="addTag"
-            @keydown.188="addTag"
-            @keydown.delete="removeLastTag"
-          />
-        </div>
-      </v-col>
-      <br />
-    </v-form>
-    <v-card
-      class="d-flex justify-center mb-6"
-      :color="$vuetify.theme.dark ? 'grey darken-3' : 'grey lighten-4'"
-      flat
-      tile
-    >
-      <v-btn color="primary" @click.prevent="search()">Search</v-btn>
-    </v-card>
-    <v-data-table
-      :hide-default-footer="true"
-      :headers="headers"
-      :items="lostItems"
-      :sort-by="'dateFrom'"
-      :sort-desc="true"
-      @click:row="rowClick"
-    >
-      <template v-slot:item.dateFrom="{ item }">
-        <span>{{ item.dateFrom | formatDate }}</span>
-      </template>
-      <template v-slot:item.dateTo="{ item }">
-        <span>{{ item.dateTo | formatDate }}</span>
-      </template>
-    </v-data-table>
-    <v-row>
-      <v-col class="text-left">
-        <v-btn
-          v-if="currentPage != 0"
-          color="primary"
-          @click.prevent="prevPage()"
-          >Poprzednia strona</v-btn
+  <div>
+    <template v-if="!loading">
+      <v-card class="mt-6">
+        <v-form>
+          <v-text-field v-model="titlePart" label="Title"></v-text-field>
+          <v-text-field v-model="category" label="Category"></v-text-field>
+          <v-menu
+            ref="menuFrom"
+            v-model="menuFrom"
+            :close-on-content-click="false"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="reportedFrom"
+                label="Lost from"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              ref="picker"
+              v-model="reportedFrom"
+              :max="new Date().toISOString()"
+              min="2020-04-18T12:50:17.876Z"
+              @change="saveFrom"
+            ></v-date-picker>
+          </v-menu>
+          <v-menu
+            ref="menuTo"
+            v-model="menuTo"
+            :close-on-content-click="false"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="reportedTo"
+                label="Lost to"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              ref="picker"
+              v-model="reportedTo"
+              :max="new Date().toISOString()"
+              min="2020-04-18T12:50:17.876Z"
+              @change="saveTo"
+            ></v-date-picker>
+          </v-menu>
+          <v-col cols="12" md="6">
+            <div class="tag-input">
+              <div
+                v-for="(tag, index) in tags"
+                :key="tag"
+                class="tag-input__tag"
+              >
+                <span @click="removeTag(index)">x</span>
+                {{ tag }}
+              </div>
+              <input
+                type="text"
+                placeholder="Enter Tags"
+                class="tag-input__text"
+                @keydown.enter="addTag"
+                @keydown.188="addTag"
+                @keydown.delete="removeLastTag"
+              />
+            </div>
+          </v-col>
+          <br />
+        </v-form>
+        <v-card
+          class="d-flex justify-center mb-6"
+          :color="$vuetify.theme.dark ? 'grey darken-3' : 'grey lighten-4'"
+          flat
+          tile
         >
-      </v-col>
-      <v-col class="text-right">
-        <v-btn
-          v-if="lostItems.length == 10"
-          color="primary"
-          @click.prevent="nextPage()"
-          >Natępna strona</v-btn
+          <v-btn color="primary" @click.prevent="search()">Search</v-btn>
+        </v-card>
+        <v-data-table
+          :hide-default-footer="true"
+          :headers="headers"
+          :items="lostItems"
+          :sort-by="'dateFrom'"
+          :sort-desc="true"
+          @click:row="rowClick"
         >
-      </v-col>
-    </v-row>
-    <br />
-  </v-card>
+          <template v-slot:item.dateFrom="{ item }">
+            <span>{{ item.dateFrom | formatDate }}</span>
+          </template>
+          <template v-slot:item.dateTo="{ item }">
+            <span>{{ item.dateTo | formatDate }}</span>
+          </template>
+        </v-data-table>
+        <v-row>
+          <v-col class="text-left">
+            <v-btn
+              v-if="currentPage != 0"
+              color="primary"
+              @click.prevent="prevPage()"
+              >Poprzednia strona</v-btn
+            >
+          </v-col>
+          <v-col class="text-right">
+            <v-btn
+              v-if="lostItems.length == 10"
+              color="primary"
+              @click.prevent="nextPage()"
+              >Natępna strona</v-btn
+            >
+          </v-col>
+        </v-row>
+        <br />
+      </v-card>
+    </template>
+    <template v-else>
+      <loading-spinner />
+    </template>
+  </div>
 </template>
 
 <script>
 import RestService from '~/common/rest.service'
+import LoadingSpinner from '~/components/LoadingSpinner'
+
 export default {
+  components: { LoadingSpinner },
+
   data: () => ({
     headers: [
       // { text: 'id', value: 'lostReportId' },
@@ -141,7 +156,8 @@ export default {
     menuTo: false,
     currentPage: 0,
     tags: [],
-    city:'',
+    city: '',
+    loading: false,
   }),
 
   watch: {
@@ -151,13 +167,14 @@ export default {
   },
 
   mounted() {
+    this.loading = true
     const body = {
       titleFragment: '',
       reportedFrom: '',
       reportedTo: '',
       category: '',
       tags: [],
-      city:''
+      city: '',
     }
     // RestService.getToken(this.$axios).then((res) => {
     // console.log(res)
@@ -167,6 +184,9 @@ export default {
       })
       .catch((err) => {
         this.getError = err
+      })
+      .finally(() => {
+        this.loading = false
       })
     // })
   },
@@ -190,7 +210,6 @@ export default {
       }
     },
     rowClick(row) {
-      console.log('asd', row)
       this.$router.push(`/lost_item/${row.lostReportId}`)
     },
     saveTo(date) {
@@ -213,16 +232,20 @@ export default {
         reportedTo: dateTo,
         category: this.category,
         tags: this.tags,
-        city:this.city
+        city: this.city,
       }
       this.currentPage = this.currentPage + 1
 
+      this.loading = true
       RestService.getLostItems(this.$axios, this.currentPage, 10, body)
         .then((res) => {
           this.lostItems = res.data.content
         })
         .catch((err) => {
           this.getError = err
+        })
+        .finally(() => {
+          this.loading = false
         })
     },
     prevPage() {
@@ -239,11 +262,12 @@ export default {
         reportedTo: dateTo,
         category: this.category,
         tags: this.tags,
-        city:this.city
+        city: this.city,
       }
       if (this.currentPage - 1 >= 0) {
         this.currentPage = this.currentPage - 1
       }
+      this.loading = true
       RestService.getLostItems(this.$axios, this.currentPage, 10, body)
         .then((res) => {
           this.lostItems = res.data.content
@@ -251,9 +275,13 @@ export default {
         .catch((err) => {
           this.getError = err
         })
+        .finally(() => {
+          this.loading = false
+        })
     },
 
     search() {
+      this.loading = true
       let dateFrom, dateTo
       if (this.reportedFrom != null) {
         dateFrom = new Date(this.reportedFrom).toISOString()
@@ -267,7 +295,7 @@ export default {
         reportedTo: dateTo,
         category: this.category,
         tags: this.tags,
-        city:this.city
+        city: this.city,
       }
       RestService.getLostItems(this.$axios, 0, 10, body)
         .then((res) => {
@@ -275,6 +303,9 @@ export default {
         })
         .catch((err) => {
           this.getError = err
+        })
+        .finally(() => {
+          this.loading = false
         })
     },
   },

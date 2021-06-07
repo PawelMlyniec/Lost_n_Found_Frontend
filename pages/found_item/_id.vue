@@ -5,7 +5,7 @@
         <found-item :found-item="foundItem" />
       </v-row>
     </template>
-        <template v-else>
+    <template v-else>
       <loading-spinner />
     </template>
   </div>
@@ -16,7 +16,7 @@ import FoundItem from '@/components/FoundItem'
 import RestService from '~/common/rest.service'
 import LoadingSpinner from '~/components/LoadingSpinner'
 export default {
-  components: { FoundItem, LoadingSpinner},
+  components: { FoundItem, LoadingSpinner },
 
   data: () => ({
     foundItem: {},

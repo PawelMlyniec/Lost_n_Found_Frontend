@@ -13,5 +13,9 @@ export default {
   components: {
     LostItemList,
   },
+
+  mounted() {
+    // this.$store.dispatch('setPageName', 'Lost items')
+  },
 }
 </script>
