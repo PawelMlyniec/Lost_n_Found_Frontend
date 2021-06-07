@@ -72,7 +72,6 @@ export default {
 
   methods: {
     resolvePost() {
-      // TODO: possibly temp
       RestService.resolveFoundItem(this.$axios, this.foundItem.id).then(
         (res) => {
           this.$router.push('/found_item/resolved_post')
@@ -98,6 +97,12 @@ export default {
         targetUserId: this.foundItem.userId,
         content: value,
       })
+        .then((res) => {
+          this.writingNewMsg = false
+        })
+        .catch((err) => {
+          this.error = err
+        })
     },
   },
 }

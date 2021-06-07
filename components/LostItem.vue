@@ -63,6 +63,7 @@ export default {
 
   data: () => ({
     writingNewMsg: false,
+    error: {},
   }),
 
   computed: {
@@ -102,6 +103,12 @@ export default {
         targetUserId: this.lostItem.userId,
         content: value,
       })
+        .then((res) => {
+          this.writingNewMsg = false
+        })
+        .catch((err) => {
+          this.error = err
+        })
     },
   },
 }
