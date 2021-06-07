@@ -230,26 +230,20 @@ export default {
   },
 
   getMessageUnreadCount(axios, id) {
-    return axios.get(
-      `http://localhost:7070/textMessages/unread?id=${encodeURIComponent(id)}`,
-      {
-        headers: this.getAuthHeader(),
-      }
-    )
+    return axios.get(`/textMessages/unread?id=${encodeURIComponent(id)}`, {
+      headers: this.getAuthHeader(),
+    })
   },
 
   getMessages(axios, id) {
-    return axios.get(
-      `http://localhost:7070/textMessages/chats?id=${encodeURIComponent(id)}`,
-      {
-        headers: this.getAuthHeader(),
-      }
-    )
+    return axios.get(`/textMessages/chats?id=${encodeURIComponent(id)}`, {
+      headers: this.getAuthHeader(),
+    })
   },
 
   getChatBetweenUsers(axios, userId, targetUserId) {
     return axios.get(
-      `http://localhost:7070/textMessages?firstUserId=${encodeURIComponent(
+      `/textMessages?firstUserId=${encodeURIComponent(
         userId
       )}&secondUserId=${encodeURIComponent(targetUserId)}`,
       {
@@ -260,7 +254,7 @@ export default {
 
   sendMessage(axios, { sourceUserId, targetUserId, content }) {
     return axios.post(
-      `http://localhost:7070/textMessages`,
+      `/textMessages`,
       {
         sourceUserId,
         targetUserId,
