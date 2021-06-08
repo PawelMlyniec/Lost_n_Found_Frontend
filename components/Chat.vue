@@ -1,5 +1,6 @@
 <template>
   <v-card class="mt-6 py-2 px-2">
+    <h2>{{ name }}</h2>
     <template v-for="msg in messages">
       <v-row
         :key="msg.textMessageId"
@@ -32,6 +33,7 @@ export default {
   },
 
   data: () => ({
+    name: '',
     chatData: {},
     messages: [],
     loading: false,
@@ -49,6 +51,19 @@ export default {
   },
 
   methods: {
+    getName() {
+      if (this.messages.length > 0) {
+        const msg = this.messages[0]
+        const id =
+          this.$auth.user.sub === msg.sourceUserId
+            ? msg.targetUserId
+            : msg.sourceUserId
+        RestService.getUserName(this.$axios, id).then((res) => {
+          this.name = res.data
+        })
+      }
+    },
+
     getMessages() {
       this.loading = true
       RestService.getChatBetweenUsers(
@@ -59,13 +74,15 @@ export default {
         .then((res) => {
           this.chatData = res.data
           this.messages = this.chatData.content
-          // console.log(this.messages)
+          console.log(this.chatData)
+          this.getName()
         })
         .catch((err) => {
           this.error = err
         })
         .finally(() => {
           this.loading = false
+          this.$emit('refreshUnreadCount')
         })
     },
 
@@ -74,7 +91,7 @@ export default {
         sourceUserId: this.$auth.user.sub,
         targetUserId: this.$route.params.id,
         content: value,
-      }).then((res) => {
+      }).finally(() => {
         this.getMessages()
       })
     },

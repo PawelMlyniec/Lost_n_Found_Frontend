@@ -4,8 +4,9 @@
       :hide-default-footer="true"
       :headers="headers"
       :items="messages"
-      :sort-by="'date'"
+      :sort-by="'sentAt'"
       :sort-desc="true"
+      :item-class="rowBackground"
       @click:row="rowClick"
     >
       <template v-slot:item.sentAt="{ item }">
@@ -21,7 +22,7 @@ import RestService from '~/common/rest.service'
 export default {
   data: () => ({
     headers: [
-      { text: 'id', value: 'textMessageId' },
+      { text: 'Name', value: 'name' },
       { text: 'Message', value: 'content' },
       { text: 'Date', value: 'sentAt' },
     ],
@@ -36,12 +37,30 @@ export default {
   },
 
   methods: {
+    addUserName(item, idx) {
+      const id =
+        this.$auth.user.sub === item.sourceUserId
+          ? item.targetUserId
+          : item.sourceUserId
+      RestService.getUserName(this.$axios, id).then((res) => {
+        this.messages[idx].name = res.data
+        this.messages = [...this.messages]
+      })
+    },
+
+    rowBackground(item) {
+      return item.read ? 'message-read' : 'message-unread'
+    },
+
     getMessages() {
       this.loading = true
       RestService.getMessages(this.$axios, this.$auth.user.sub)
         .then((res) => {
           this.messages = res.data
-          console.log(this.messages)
+          this.messages.forEach((el, idx) => {
+            this.addUserName(el, idx)
+          })
+          // console.log(this.messages)
         })
         .catch((err) => {
           this.error = err
@@ -61,3 +80,12 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.message-read {
+  // background-color: red;
+}
+.message-unread {
+  background-color: blue;
+}
+</style>

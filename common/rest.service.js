@@ -265,4 +265,10 @@ export default {
       }
     )
   },
+
+  getUserName(axios, userId) {
+    return axios.get(`/users/${encodeURIComponent(userId)}/name`, {
+      headers: this.getAuthHeader(),
+    })
+  },
 }
