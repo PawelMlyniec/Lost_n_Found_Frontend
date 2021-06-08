@@ -59,7 +59,7 @@ export default {
         .then((res) => {
           this.chatData = res.data
           this.messages = this.chatData.content
-          console.log(this.messages)
+          // console.log(this.messages)
         })
         .catch((err) => {
           this.error = err
@@ -74,6 +74,8 @@ export default {
         sourceUserId: this.$auth.user.sub,
         targetUserId: this.$route.params.id,
         content: value,
+      }).then((res) => {
+        this.getMessages()
       })
     },
   },
