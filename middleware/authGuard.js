@@ -1,23 +1,5 @@
-// import { getInstance } from '~/plugins/auth'
-
-// export const authGuard = (to, from, next) => {
-//   const authService = getInstance()
-
-//   const fn = () => {
-//     if (authService.isAuthenticated) {
-//       return next()
-//     }
-
-//     authService.loginWithRedirect({ appState: { targetUrl: to.fullPath } })
-//   }
-
-//   if (!authService.loading) {
-//     return fn()
-//   }
-
-//   authService.$watch('loading', (loading) => {
-//     if (loading === false) {
-//       return fn()
-//     }
-//   })
-// }
+export default function ({ auth, redirect }) {
+  if (!localStorage.getItem('user') || !localStorage.getItem('access_token')) {
+    redirect('/')
+  }
+}

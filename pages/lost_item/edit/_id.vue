@@ -1,9 +1,7 @@
 <template>
   <v-row justify="center" align="center">
     <v-card>
-      <v-card-title
-        >Edit lost item post</v-card-title
-      >
+      <v-card-title>Edit lost item post</v-card-title>
       <v-card-text>
         <v-form>
           <v-row>
@@ -89,10 +87,17 @@
 import RestService from '~/common/rest.service'
 
 export default {
+  middleware: ['authGuard'],
+
   data() {
     return {
-      
-      categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
+      categories: [
+        'Clothes',
+        'Office supplies',
+        'Accessories',
+        'Cars',
+        'Other',
+      ],
       lostItem: {},
       selected_dates: ['', ''],
       selected_city: '',
@@ -140,9 +145,9 @@ export default {
           this.selected_dates[0] = this.lostItem.dateFrom
           this.selected_dates[1] = this.lostItem.dateTo
           this.tags = this.lostItem.tags
-          this.entered_email=this.lostItem.emailAddress
-          this.entered_phone=this.lostReportId.telephoneNumber
-          this.selected_city=this.lostItem.city
+          this.entered_email = this.lostItem.emailAddress
+          this.entered_phone = this.lostReportId.telephoneNumber
+          this.selected_city = this.lostItem.city
           if (res.data.dateFrom != '') {
             var date = new Date(res.data.dateFrom)
             var year = date.getFullYear()
@@ -195,7 +200,7 @@ export default {
         city: this.selected_city,
         tags: this.tags,
         emailAddress: this.entered_email,
-        telephoneNumber: this.entered_phone
+        telephoneNumber: this.entered_phone,
       }
 
       RestService.updateLostItem(this.$axios, this.$route.params.id, body)

@@ -30,7 +30,7 @@
             <v-subheader>Date when object was found</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
-            <v-date-picker v-model="selected_dates" ></v-date-picker>
+            <v-date-picker v-model="selected_dates"></v-date-picker>
           </v-col>
         </v-row>
         <v-row>
@@ -38,7 +38,10 @@
             <v-subheader>Item category</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
-             <v-select v-model="selected_category" :items="categories" ></v-select>
+            <v-select
+              v-model="selected_category"
+              :items="categories"
+            ></v-select>
           </v-col>
         </v-row>
         <!--<v-row>
@@ -109,6 +112,8 @@
 import RestService from '~/common/rest.service'
 
 export default {
+  middleware: ['authGuard'],
+
   data: () => ({
     selected_dates: '2021-09-10',
     cities: ['Warszawa', 'Gdańsk', 'Poznań', 'Kraków'],
@@ -152,7 +157,7 @@ export default {
         foundDate: foundDate,
         telephoneNumber: this.entered_phone,
         emailAddress: this.entered_email,
-        city: this.selected_city
+        city: this.selected_city,
       }
 
       RestService.addFoundItemPost(this.$axios, body)

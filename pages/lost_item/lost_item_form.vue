@@ -1,5 +1,5 @@
-<template >
-  <v-card v-if='sent==false'>
+<template>
+  <v-card v-if="sent == false">
     <v-card-title class="headline justify-center mb-1">
       Fill in the lost item form
     </v-card-title>
@@ -38,7 +38,10 @@
             <v-subheader>Item category</v-subheader>
           </v-col>
           <v-col cols="12" md="6">
-            <v-select :items="categories" v-model="selected_category"></v-select>
+            <v-select
+              :items="categories"
+              v-model="selected_category"
+            ></v-select>
           </v-col>
         </v-row>
         <v-row>
@@ -125,6 +128,8 @@
 import RestService from '~/common/rest.service'
 
 export default {
+  middleware: ['authGuard'],
+
   data: () => ({
     categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
     selected_dates: ['2021-09-10', '2021-09-20'],
@@ -137,9 +142,9 @@ export default {
     entered_phone: '',
     entered_title: '',
     rodo_checkbox: false,
-    sent:false,
+    sent: false,
     foundItems: [],
-        headers: [
+    headers: [
       // { text: 'id', value: 'lostReportId' },
       { text: 'Title', value: 'title' },
       { text: 'Description', value: 'description' },
@@ -149,7 +154,7 @@ export default {
     ],
   }),
   methods: {
-        rowClick(row) {
+    rowClick(row) {
       console.log('asd', row)
       this.$router.push(`/found_item/${row.id}`)
     },
@@ -188,38 +193,37 @@ export default {
         tags: this.tags,
         city: this.selected_city,
         telephoneNumber: this.entered_phone,
-        emailAddress: this.entered_email
+        emailAddress: this.entered_email,
       }
       RestService.addLostItemPost(this.$axios, body)
         .then((res) => {
-                 //   this.$router.push({
-           // path: 'form_publish_success',
-         // })
+          //   this.$router.push({
+          // path: 'form_publish_success',
+          // })
         })
         .catch((error) => {
           //error.response.status Check status code
         })
         .finally(() => {
-               //     this.$router.push({
-           // path: 'form_publish_success',
-         // })
+          //     this.$router.push({
+          // path: 'form_publish_success',
+          // })
         })
-               //   this.$router.push({
-         //  path: 'form_publish_success',
-         // })
-    
-      RestService.getMatchingFoundItems(this.$axios,0,20, body)
+      //   this.$router.push({
+      //  path: 'form_publish_success',
+      // })
+
+      RestService.getMatchingFoundItems(this.$axios, 0, 20, body)
         .then((res) => {
-           this.foundItems = res.data.content
+          this.foundItems = res.data.content
         })
         .catch((error) => {
           //error.response.status Check status code
         })
-        .finally(() => {
-        })
-      this.sent=true
+        .finally(() => {})
+      this.sent = true
+    },
   },
-  }
 }
 </script>
 

@@ -16,5 +16,7 @@
 </template>
 
 <script>
-export default {}
+export default {
+  middleware: ['authGuard'],
+}
 </script>

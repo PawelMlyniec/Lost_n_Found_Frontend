@@ -1,9 +1,7 @@
 <template>
   <v-row justify="center" align="center">
     <v-card>
-      <v-card-title
-        >Edit found item post</v-card-title
-      >
+      <v-card-title>Edit found item post</v-card-title>
       <v-card-text>
         <v-form>
           <v-row>
@@ -19,7 +17,7 @@
               <v-subheader>found date</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
-              <v-date-picker v-model="selected_dates" ></v-date-picker>
+              <v-date-picker v-model="selected_dates"></v-date-picker>
             </v-col>
           </v-row>
           <v-row>
@@ -35,7 +33,7 @@
               <v-subheader>City in which you found the item</v-subheader>
             </v-col>
             <v-col cols="12" md="6">
-               <v-text-field v-model="selected_city"></v-text-field>
+              <v-text-field v-model="selected_city"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
@@ -51,17 +49,14 @@
             </v-col>
           </v-row>
           <v-row>
-          <v-col cols="12" md="4">
-            <v-subheader>Contact info</v-subheader>
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-text-field v-model="email" label="E-mail"></v-text-field>
-            <v-text-field
-              v-model="phone"
-              label="Phone number"
-            ></v-text-field>
-          </v-col>
-        </v-row>
+            <v-col cols="12" md="4">
+              <v-subheader>Contact info</v-subheader>
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="email" label="E-mail"></v-text-field>
+              <v-text-field v-model="phone" label="Phone number"></v-text-field>
+            </v-col>
+          </v-row>
           <!--<v-row>
             <v-col cols="12" md="4">
               <v-subheader>Additional tags</v-subheader>
@@ -101,10 +96,17 @@
 import RestService from '~/common/rest.service'
 
 export default {
+  middleware: ['authGuard'],
+
   data() {
     return {
-      
-      categories: ['Clothes', 'Office supplies', 'Accessories', 'Cars', 'Other'],
+      categories: [
+        'Clothes',
+        'Office supplies',
+        'Accessories',
+        'Cars',
+        'Other',
+      ],
       lostItem: {},
       selected_dates: '',
       selected_city: '',
@@ -117,9 +119,9 @@ export default {
         title: '',
         description: '',
         category: '',
-        city:'',
-        email:'',
-        phone: ''
+        city: '',
+        email: '',
+        phone: '',
       },
       tags: [],
     }
@@ -153,9 +155,9 @@ export default {
           this.description = this.lostItem.description
           this.title = this.lostItem.title
           this.selected_dates[1] = ''
-          this.city=this.lostItem.city
-          this.email=this.lostItem.emailAddress
-          this.phone=this.lostItem.telephoneNumber
+          this.city = this.lostItem.city
+          this.email = this.lostItem.emailAddress
+          this.phone = this.lostItem.telephoneNumber
           if (res.data.foundDate != '') {
             var date = new Date(res.data.foundDate)
             var year = date.getFullYear()
@@ -168,9 +170,8 @@ export default {
             if (month < 10) {
               month = '0' + month
             }
-            this.selected_dates= year + '-' + month + '-' + dt
+            this.selected_dates = year + '-' + month + '-' + dt
           }
-          
         })
         .catch((err) => {
           // error occured
@@ -188,8 +189,8 @@ export default {
         category: this.description,
         foundDate: foundDate,
         city: this.city,
-        emailAddress:this.email,
-        telephoneNumber:this.phone
+        emailAddress: this.email,
+        telephoneNumber: this.phone,
       }
 
       RestService.updateFoundItem(this.$axios, this.$route.params.id, body)
