@@ -1,6 +1,6 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="2"> </v-col>
+  <v-row justify="center" align="center" no-gutters class="mt-16">
+    <h1>Lost 'n' Found</h1>
   </v-row>
 </template>
 
