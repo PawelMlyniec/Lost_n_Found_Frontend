@@ -76,7 +76,7 @@
           v-if="currentPage != 0"
           color="primary"
           @click.prevent="prevPage()"
-          >Poprzednia strona</v-btn
+          >Previous Page</v-btn
         >
       </v-col>
       <v-col class="text-right">
@@ -84,7 +84,7 @@
           v-if="foundItems.length == 10"
           color="primary"
           @click.prevent="nextPage()"
-          >Natępna strona</v-btn
+          >Next Page</v-btn
         >
       </v-col>
     </v-row>
